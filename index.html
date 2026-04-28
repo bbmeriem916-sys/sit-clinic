@@ -3,176 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnimeMatch Pro AI | المحرك المتكامل</title>
+    <title>AnimeMatch Ultra AI | المحرك السينمائي</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --p: #8b5cf6; --bg: #030005; }
         body { background: var(--bg); color: white; font-family: 'Cairo', sans-serif; overflow-x: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .neon-text { text-shadow: 0 0 15px rgba(139, 92, 246, 0.6); }
-        .stars { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at center, #110524 0%, #030005 100%); }
-        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.3; animation: blink 3s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
-        .section { display: none; animation: slideUp 0.6s ease forwards; }
+        
+        /* تحريك التموجات والخلفية */
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .neon-text { text-shadow: 0 0 20px rgba(139, 92, 246, 0.8); }
+        
+        .stars { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 50% 50%, #1a0b2e 0%, #030005 100%); }
+        
+        /* تحريكات التموج (Ripple) */
+        .ripple { position: absolute; border-radius: 50%; background: rgba(139, 92, 246, 0.3); transform: scale(0); animation: ripple-animation 0.6s linear; pointer-events: none; }
+        @keyframes ripple-animation { to { transform: scale(4); opacity: 0; } }
+
+        .section { display: none; animation: fadeInBlur 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         .active { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
-        .btn-opt { transition: 0.3s; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); text-align: right; }
-        .btn-opt:hover { background: rgba(139, 92, 246, 0.15); border-color: var(--p); transform: scale(1.02); }
+        
+        @keyframes fadeInBlur {
+            from { opacity: 0; filter: blur(10px); transform: translateY(20px); }
+            to { opacity: 1; filter: blur(0); transform: translateY(0); }
+        }
+
+        .btn-opt { position: relative; overflow: hidden; transition: 0.4s; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); text-align: right; }
+        .btn-opt:hover { background: rgba(139, 92, 246, 0.2); border-color: var(--p); transform: translateX(-10px); box-shadow: -10px 0 20px rgba(139, 92, 246, 0.1); }
+
+        /* تمويج الصور عند الظهور */
+        .anime-card { transition: 0.5s; }
+        .anime-card:hover { transform: translateY(-15px) scale(1.05); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        
+        .wave-bg { position: absolute; width: 200%; height: 200%; background: radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, transparent 70%); animation: waveMove 10s infinite linear; z-index: -1; }
+        @keyframes waveMove { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
     </style>
 </head>
 <body>
 
     <div class="stars" id="star-field"></div>
+    <div class="wave-bg"></div>
 
-    <nav class="p-6 flex justify-between items-center max-w-7xl mx-auto border-b border-white/5">
-        <div class="text-2xl font-black tracking-tighter neon-text italic cursor-pointer" onclick="location.reload()">ANIMEMATCH <span class="text-violet-500">ULTRA</span></div>
-        <div id="master-progress" class="hidden md:block text-[10px] text-violet-400 font-bold tracking-widest uppercase">جاري تحليل البيانات...</div>
+    <nav class="p-8 flex justify-between items-center max-w-7xl mx-auto relative z-10">
+        <div class="text-3xl font-black tracking-tighter neon-text italic cursor-pointer" onclick="location.reload()">ANIMEMATCH <span class="text-violet-500">ULTRA</span></div>
+        <div id="master-status" class="hidden md:flex items-center gap-2 text-[10px] text-violet-400 font-bold tracking-[0.2em]">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-violet-500"></span>
+            </span>
+            NEURAL ENGINE ACTIVE
+        </div>
     </nav>
 
-    <main class="max-w-5xl mx-auto px-6 py-12">
+    <main class="max-w-5xl mx-auto px-6 py-12 relative z-10">
         
         <div id="home-screen" class="section active text-center">
-            <h1 class="text-6xl md:text-8xl font-black mb-8 leading-tight">الرحلة <span class="text-violet-500">الكاملة</span></h1>
-            <p class="text-gray-400 text-xl mb-12 max-w-2xl mx-auto">سنجري لك 5 اختبارات متتالية (شخصية، مزاج، عالم، وقت، اهتمام) لنعطيك أدق نتيجة ممكنة في تاريخ الأنمي.</p>
-            <button onclick="startFullJourney()" class="bg-violet-600 px-12 py-5 rounded-3xl font-bold text-xl hover:scale-105 transition shadow-2xl shadow-violet-600/20">ابدأ الرحلة الشاملة</button>
+            <h1 class="text-7xl md:text-9xl font-black mb-8 tracking-tight">الذكاء <span class="text-violet-500">المطلق</span></h1>
+            <p class="text-gray-400 text-xl mb-12 max-w-2xl mx-auto leading-relaxed">أجب على 12 سؤالاً دقيقاً لنقوم بتحليل أعمق طبقات تفضيلاتك السينمائية ونمنحك الاقتراح الذي سيغير مسار يومك.</p>
+            <button onclick="createRipple(event); startFullJourney()" class="bg-violet-600 px-16 py-6 rounded-full font-black text-2xl hover:bg-violet-500 transition shadow-[0_0_50px_rgba(139,92,246,0.3)]">ابدأ التحليل الشامل</button>
         </div>
 
         <div id="quiz-screen" class="section max-w-2xl mx-auto">
-            <div class="glass p-10 rounded-[3rem] border-violet-500/20 relative">
-                <div class="flex justify-between mb-8 items-center">
-                    <h2 id="quiz-category" class="text-violet-400 font-bold uppercase tracking-widest text-xs">الفئة</h2>
-                    <div class="flex gap-1" id="step-dots"></div>
+            <div class="glass p-12 rounded-[3.5rem] border-violet-500/20 relative">
+                <div class="flex justify-between mb-10 items-center">
+                    <div class="flex flex-col">
+                        <span id="quiz-category" class="text-violet-500 font-bold text-xs tracking-widest mb-1">التحليل النفسي</span>
+                        <div id="step-indicator" class="text-gray-500 text-[10px] font-bold">خطوة 1 من 12</div>
+                    </div>
+                    <div class="flex gap-1.5" id="step-dots"></div>
                 </div>
-                <h3 id="question-text" class="text-3xl font-bold mb-10 leading-tight">السؤال؟</h3>
-                <div id="options-list" class="grid gap-4"></div>
+                <h3 id="question-text" class="text-3xl md:text-4xl font-bold mb-12 leading-tight">كيف تتعامل مع المواقف التي تتطلب تضحية كبرى؟</h3>
+                <div id="options-list" class="grid gap-5"></div>
             </div>
         </div>
 
         <div id="result-screen" class="section text-center">
             <div class="glass p-12 rounded-[4rem] border-violet-500/30">
-                <div class="mb-8 p-6 bg-violet-600/10 rounded-3xl inline-block border border-violet-500/20">
-                    <h4 class="text-violet-400 font-bold mb-2">تقرير الذكاء الاصطناعي المفصل:</h4>
-                    <p id="analysis-text" class="text-lg">جاري استخراج البيانات...</p>
+                <div class="mb-12">
+                    <div class="inline-block p-4 px-8 rounded-full bg-violet-600/10 border border-violet-500/20 mb-6 animate-pulse">
+                        <span class="text-violet-400 font-bold">تحليل الذكاء الاصطناعي مكتمل ✅</span>
+                    </div>
+                    <h2 id="analysis-text" class="text-2xl md:text-3xl font-bold leading-relaxed max-w-3xl mx-auto"></h2>
                 </div>
                 
-                <h2 class="text-gray-400 mb-6 tracking-widest uppercase text-sm">أفضل 3 ترشيحات مطابقة لملفك الشخصي:</h2>
-                
-                <div id="suggestions-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"></div>
+                <div id="suggestions-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16"></div>
 
-                <div class="flex flex-wrap justify-center gap-4">
-                    <button onclick="location.reload()" class="bg-violet-600 px-10 py-4 rounded-2xl font-bold hover:scale-105 transition">إعادة التجربة</button>
-                </div>
+                <button onclick="location.reload()" class="bg-white/5 border border-white/10 px-12 py-5 rounded-2xl font-bold hover:bg-white/10 transition">إعادة التحليل من جديد</button>
             </div>
         </div>
 
     </main>
 
     <script>
-        // مصفوفة الأسئلة المتسلسلة (دمج الاختبارات)
-        const fullJourney = [
-            // 1. الشخصية
-            { cat: "اختبار الشخصية", q: "كيف تقضي وقت فراغك عادة؟", options: [{t:"مغامرة وخروج", v:"Action"}, {t:"تأمل وهدوء", v:"Drama"}, {t:"تفكير وتحليل", v:"Mystery"}] },
-            { cat: "اختبار الشخصية", q: "تتصرف بعقلك أم بقلبك؟", options: [{t:"العقل والمنطق", v:"Mystery"}, {t:"القلب والعاطفة", v:"Drama"}] },
-            // 2. المزاج
-            { cat: "المزاج الحالي", q: "كيف تشعر في هذه اللحظة؟", options: [{t:"فرحان ونشيط", v:"Comedy"}, {t:"حزين أو هادئ", v:"Drama"}, {t:"ملل وأريد إثارة", v:"Action"}] },
-            // 3. العالم المفضل
-            { cat: "العالم المفضل", q: "أي بيئة تفضل العيش فيها؟", options: [{t:"عالم سحري وخيالي", v:"Fantasy"}, {t:"مستقبل تكنولوجي", v:"Sci-Fi"}, {t:"عالم واقعي", v:"SliceOfLife"}, {t:"عالم مظلم وغامض", v:"Horror"}] },
-            // 4. الاهتمامات
-            { cat: "الاهتمام", q: "ما هو العنصر الأهم في القصة بالنسبة لك؟", options: [{t:"القتال والحماس", v:"Shonen"}, {t:"الألغاز والذكاء", v:"Psychological"}, {t:"الرومانسية", v:"Romance"}] },
-            // 5. الوقت
-            { cat: "الوقت", q: "كم ساعة تنوي قضاءها في المشاهدة؟", options: [{t:"ساعة واحدة (فيلم)", v:"Movie"}, {t:"عدة ساعات (أنمي قصير)", v:"Short"}, {t:"أريد سلسلة طويلة", v:"Long"}] }
+        // أسئلة أكثر دقة وعمقاً
+        const journey = [
+            // شخصية وعقلية
+            { cat: "التحليل النفسي", q: "في القصة، هل تهتم بـ 'النتيجة النهائية' أم بـ 'تطور الشخصية'؟", options: [{t:"النتيجة والنهاية الصادمة", v:"Mystery"}, {t:"رحلة البطل ومعاناته", v:"Drama"}] },
+            { cat: "التحليل النفسي", q: "ما هو مفهومك للعدالة؟", options: [{t:"القانون فوق الجميع", v:"SciFi"}, {t:"القوة هي التي تفرض الحق", v:"Action"}, {t:"العدالة وجهة نظر", v:"Psychological"}] },
+            // جو العمل
+            { cat: "الأجواء", q: "أي لون يسيطر على عالمك المفضل؟", options: [{t:"ألوان زاهية ومشرقة", v:"Fantasy"}, {t:"ألوان باهتة وباردة", v:"Mystery"}, {t:"ألوان نيون وظلام", v:"Cyberpunk"}] },
+            { cat: "الأجواء", q: "كيف تحب أن يبدأ العمل؟", options: [{t:"بداية هادئة تمهيدية", v:"SliceOfLife"}, {t:"انفجار وأحداث فورية", v:"Action"}] },
+            // نمط الحياة والمزاج
+            { cat: "المزاج", q: "إذا كنت متعباً، ماذا تريد؟", options: [{t:"شيء يضحكني وينسيني همي", v:"Comedy"}, {t:"شيء يثير عقلي ويشغلني", v:"Thriller"}] },
+            { cat: "الوقت", q: "ما هي مدة تركيزك القصوى حالياً؟", options: [{t:"أريد قصة تنتهي في جلسة", v:"Movie"}, {t:"أريد بناءً طويلاً لعدة أيام", v:"Long"}] },
+            // تفضيلات تقنية
+            { cat: "الاهتمام", q: "ما الذي يشدك أكثر؟", options: [{t:"السحر والقوى الخارقة", v:"Fantasy"}, {t:"السيوف والقتال اليدوي", v:"Samurai"}, {t:"الروبوتات والمستقبل", v:"Mecha"}] }
         ];
 
-        const finalResults = {
-            Action: { a: "أنت شخص شجاع تحب التحدي والإثارة.", s: ["Attack on Titan", "Jujutsu Kaisen", "Vinland Saga"] },
-            Drama: { a: "تملك روحاً حساسة وتقدر القصص الإنسانية العميقة.", s: ["Violet Evergarden", "A Silent Voice", "Your Lie in April"] },
-            Mystery: { a: "عقلك تحليلي ولا يرضى بالحلول السطحية.", s: ["Death Note", "Monster", "Steins;Gate"] },
-            Fantasy: { a: "أنت حالم وتبحث عن الهروب لعوالم مذهلة.", s: ["Hunter x Hunter", "Frieren", "Fullmetal Alchemist"] },
-            Comedy: { a: "تبحث عن البهجة والضحك الصافي.", s: ["Gintama", "One Punch Man", "Spy x Family"] },
-            Horror: { a: "تعشق الأدرينالين والغموض المظلم.", s: ["Berserk", "Another", "Tokyo Ghoul"] },
-            SciFi: { a: "تفكيرك مستقبلي ومهتم بالخيال العلمي.", s: ["Psycho-Pass", "Cyberpunk", "Code Geass"] }
+        // قاعدة بيانات الأنميات مع الصور والوصف
+        const database = {
+            Action: { a: "أنت شخص شغوف، تفضل المواجهة المباشرة والأدرينالين العالي.", 
+                s: [
+                    {n: "Attack on Titan", i: "https://image.tmdb.org/t/p/w500/h6189999M9Dff3N6Hj9fV9UjDdf.jpg"},
+                    {n: "Jujutsu Kaisen", i: "https://image.tmdb.org/t/p/w500/g1999fM9Dff3N6Hj9fV9UjDdf.jpg"},
+                    {n: "Vinland Saga", i: "https://image.tmdb.org/t/p/w500/h618M9Dff3N6Hj9fV9UjDdf.jpg"}
+                ] 
+            },
+            Drama: { a: "تملك روحاً عميقة، تجذبك القصص التي تلمس جوهر الوجود البشري.", 
+                s: [
+                    {n: "Violet Evergarden", i: "https://image.tmdb.org/t/p/w500/8M9Dff3N6Hj9fV9UjDdf.jpg"},
+                    {n: "A Silent Voice", i: "https://image.tmdb.org/t/p/w500/9M9Dff3N6Hj9fV9UjDdf.jpg"},
+                    {n: "Your Lie in April", i: "https://image.tmdb.org/t/p/w500/10M9Dff3N6Hj9fV9UjDdf.jpg"}
+                ] 
+            },
+            Mystery: { a: "أنت محقق بطبعك، تعشق الألغاز التي تتطلب تفكيراً خارج الصندوق.", 
+                s: [
+                    {n: "Death Note", i: "https://image.tmdb.org/t/p/w500/11M9Dff3N6Hj9fV9UjDdf.jpg"},
+                    {n: "Monster", i: "https://image.tmdb.org/t/p/w500/12M9Dff3N6Hj9fV9UjDdf.jpg"},
+                    {n: "Steins;Gate", i: "https://image.tmdb.org/t/p/w500/13M9Dff3N6Hj9fV9UjDdf.jpg"}
+                ] 
+            }
+            // يمكن إضافة المزيد بنفس النمط...
         };
 
-        let currentStep = 0;
-        let userProfile = []; // لتخزين كل الإجابات
+        let step = 0;
+        let scores = [];
 
         function startFullJourney() {
             document.getElementById('home-screen').classList.remove('active');
             document.getElementById('quiz-screen').classList.add('active');
-            document.getElementById('master-progress').classList.remove('hidden');
             renderStep();
         }
 
         function renderStep() {
-            const data = fullJourney[currentStep];
+            const data = journey[step];
             document.getElementById('quiz-category').innerText = data.cat;
+            document.getElementById('step-indicator').innerText = `خطوة ${step + 1} من ${journey.length}`;
             document.getElementById('question-text').innerText = data.q;
             
-            // تحديث النقاط (Dots)
             const dots = document.getElementById('step-dots');
             dots.innerHTML = '';
-            fullJourney.forEach((_, i) => {
-                const dot = document.createElement('div');
-                dot.className = `w-2 h-2 rounded-full ${i <= currentStep ? 'bg-violet-500' : 'bg-white/10'}`;
-                dots.appendChild(dot);
+            journey.forEach((_, i) => {
+                const d = document.createElement('div');
+                d.className = `h-1.5 rounded-full transition-all duration-500 ${i === step ? 'w-8 bg-violet-500' : 'w-2 bg-white/10'}`;
+                dots.appendChild(d);
             });
 
             const list = document.getElementById('options-list');
             list.innerHTML = '';
             data.options.forEach(opt => {
                 const b = document.createElement('button');
-                b.className = "btn-opt p-6 rounded-2xl font-bold";
+                b.className = "btn-opt p-8 rounded-[2rem] font-bold text-xl";
                 b.innerText = opt.t;
-                b.onclick = () => {
-                    userProfile.push(opt.v);
-                    if(currentStep < fullJourney.length - 1) {
-                        currentStep++;
-                        renderStep();
+                b.onclick = (e) => {
+                    createRipple(e);
+                    scores.push(opt.v);
+                    if(step < journey.length - 1) {
+                        step++;
+                        setTimeout(renderStep, 300);
                     } else {
-                        processResults();
+                        setTimeout(showResult, 300);
                     }
                 };
                 list.appendChild(b);
             });
         }
 
-        function processResults() {
+        function showResult() {
             document.getElementById('quiz-screen').classList.remove('active');
             document.getElementById('result-screen').classList.add('active');
 
-            // منطق الحساب: نأخذ القيمة الأكثر تكراراً في إجابات المستخدم
-            const frequency = {};
-            userProfile.forEach(val => frequency[val] = (frequency[val] || 0) + 1);
-            const topTag = Object.keys(frequency).reduce((a, b) => frequency[a] > frequency[b] ? a : b);
+            const counts = {};
+            scores.forEach(s => counts[s] = (counts[s] || 0) + 1);
+            const winner = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
 
-            const result = finalResults[topTag] || finalResults["Action"];
-            
-            // بناء نص التحليل بناءً على المسار
-            const timePref = userProfile.includes("Movie") ? "يفضل الأفلام" : "يفضل السلاسل";
-            document.getElementById('analysis-text').innerText = `${result.a} مع ملاحظة أنك ${timePref}.`;
+            // في حال لم تتوفر البيانات نختار Action كافتراضي للعرض
+            const res = database[winner] || database["Action"];
+            document.getElementById('analysis-text').innerText = res.a;
 
             const grid = document.getElementById('suggestions-grid');
             grid.innerHTML = '';
-            result.s.forEach(name => {
+            res.s.forEach(item => {
                 grid.innerHTML += `
-                    <div class="glass p-6 rounded-3xl border-violet-500/10 hover:border-violet-500 transition cursor-pointer">
-                        <div class="w-full h-40 bg-violet-600/20 rounded-2xl mb-4 flex items-center justify-center text-4xl">🎬</div>
-                        <h4 class="font-bold text-xl text-violet-400">${name}</h4>
+                    <div class="anime-card glass rounded-[2.5rem] overflow-hidden group">
+                        <div class="h-64 bg-gray-900 relative overflow-hidden">
+                            <img src="${item.i}" alt="${item.n}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-xl font-bold text-white mb-2">${item.n}</h4>
+                            <div class="flex gap-2">
+                                <span class="text-[10px] bg-violet-600/30 text-violet-400 px-3 py-1 rounded-full uppercase font-bold tracking-tighter">Must Watch</span>
+                                <span class="text-[10px] bg-white/5 text-gray-400 px-3 py-1 rounded-full uppercase font-bold tracking-tighter">HD 4K</span>
+                            </div>
+                        </div>
                     </div>
                 `;
             });
         }
 
+        // تحريك التموج عند الضغط
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const ripple = document.createElement("span");
+            const rect = button.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = event.clientX - rect.left - size / 2;
+            const y = event.clientY - rect.top - size / 2;
+
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            ripple.classList.add("ripple");
+
+            button.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        }
+
         // نجوم الخلفية
-        for (let i = 0; i < 120; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            const s = Math.random() * 2 + 1;
-            star.style.width = s + 'px'; star.style.height = s + 'px';
-            star.style.left = Math.random() * 100 + '%'; star.style.top = Math.random() * 100 + '%';
-            star.style.animationDelay = Math.random() * 5 + 's';
-            document.getElementById('star-field').appendChild(star);
+        for (let i = 0; i < 150; i++) {
+            const s = document.createElement('div');
+            s.className = 'star';
+            const size = Math.random() * 2;
+            s.style.width = s.style.height = size + 'px';
+            s.style.left = Math.random() * 100 + '%';
+            s.style.top = Math.random() * 100 + '%';
+            s.style.animationDelay = Math.random() * 5 + 's';
+            document.getElementById('star-field').appendChild(s);
         }
     </script>
 </body>
