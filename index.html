@@ -1,73 +1,104 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineMatch AI | اكتشف عالمك</title>
+    <title>AnimeMatch AI | المنصة العالمية للترشيح</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --p: #8b5cf6; --bg: #030005; }
         body { background: var(--bg); color: white; font-family: 'Cairo', sans-serif; overflow-x: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .neon-text { text-shadow: 0 0 10px rgba(139, 92, 246, 0.5); }
-        
-        /* تأثير الخلفية الكونية */
-        .stars { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at center, #1a0b2e 0%, #030005 100%); }
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .neon-text { text-shadow: 0 0 15px rgba(139, 92, 246, 0.6); }
+        .stars { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at center, #110524 0%, #030005 100%); }
         .star { position: absolute; background: white; border-radius: 50%; opacity: 0.3; animation: blink 3s infinite; }
         @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
-
-        .btn-glow { transition: 0.4s; position: relative; overflow: hidden; }
-        .btn-glow:hover { box-shadow: 0 0 25px var(--p); transform: translateY(-3px); }
-        
-        .fade-in { animation: fadeIn 0.8s ease forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .hidden { display: none; }
+        .section { display: none; animation: slideUp 0.6s ease forwards; }
+        .active { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        .btn-opt { transition: 0.3s; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); }
+        .btn-opt:hover { background: rgba(139, 92, 246, 0.15); border-color: var(--p); transform: scale(1.02); }
     </style>
 </head>
 <body>
 
     <div class="stars" id="star-field"></div>
 
-    <nav class="p-6 flex justify-between items-center max-w-7xl mx-auto">
-        <div class="text-2xl font-black tracking-tighter neon-text italic">CINEMATCH <span class="text-violet-500">AI</span></div>
-        <div class="text-xs uppercase tracking-widest text-gray-400">محرك تحليل الشخصية السينمائي</div>
+    <nav class="p-6 flex justify-between items-center max-w-7xl mx-auto border-b border-white/5">
+        <div class="text-2xl font-black tracking-tighter neon-text italic cursor-pointer" onclick="location.reload()">ANIMEMATCH <span class="text-violet-500">PRO</span></div>
+        <div class="hidden md:block text-[10px] uppercase tracking-[0.3em] text-gray-500">Artificial Intelligence Entertainment System</div>
     </nav>
 
-    <main class="max-w-4xl mx-auto px-6 pt-20 pb-32">
+    <main class="max-w-5xl mx-auto px-6 py-12">
         
-        <div id="start-screen" class="text-center fade-in">
-            <h1 class="text-6xl md:text-8xl font-black mb-8 leading-none">فيلمك القادم <br><span class="text-violet-500">مكتوب في شخصيتك</span></h1>
-            <p class="text-gray-400 text-xl mb-12 max-w-2xl mx-auto">توقف عن البحث العشوائي. دع الذكاء الاصطناعي يحلل روحك ليختار لك الأنمي أو الفيلم الذي سيغير نظرتك للعالم.</p>
-            <button onclick="startQuiz()" class="btn-glow bg-violet-600 text-white px-12 py-5 rounded-2xl font-bold text-xl shadow-2xl">ابدأ التجربة الآن</button>
-        </div>
-
-        <div id="quiz-screen" class="hidden fade-in">
-            <div class="glass p-10 rounded-[3rem] border-violet-500/20">
-                <div class="flex justify-between mb-8">
-                    <span id="progress-text" class="text-violet-400 font-bold">السؤال 1 من 4</span>
-                    <div class="w-32 h-2 bg-white/5 rounded-full overflow-hidden">
-                        <div id="progress-bar" class="h-full bg-violet-600 transition-all duration-500" style="width: 25%"></div>
-                    </div>
-                </div>
-                
-                <h2 id="question-text" class="text-3xl font-bold mb-10 leading-snug">إذا وجدت باباً غامضاً في منتصف غابة، ماذا تفعل؟</h2>
-                
-                <div id="options-container" class="grid gap-4">
-                    </div>
+        <div id="home-screen" class="section active">
+            <div class="text-center mb-16">
+                <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">حلل روحك.. <br><span class="text-violet-500">اختر عالمك</span></h1>
+                <p class="text-gray-400 text-lg">أكبر مجموعة اختبارات دقيقة مدعومة بذكاء اصطناعي لترشيح الأنمي والأفلام.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <button onclick="initQuiz(0)" class="glass p-8 rounded-[2rem] text-right hover:border-violet-500 transition-all group">
+                    <span class="text-3xl mb-4 block">🧠</span>
+                    <h3 class="font-bold text-xl mb-2">شخصيتك العامة</h3>
+                    <p class="text-gray-500 text-sm">اكتشف النوع الذي يعكس جوهرك الحقيقي.</p>
+                </button>
+                <button onclick="initQuiz(1)" class="glass p-8 rounded-[2rem] text-right hover:border-violet-500 transition-all">
+                    <span class="text-3xl mb-4 block">🎭</span>
+                    <h3 class="font-bold text-xl mb-2">مزاجك الحالي</h3>
+                    <p class="text-gray-500 text-sm">ماذا تحتاج أن تشاهد لتغير جوّك الآن؟</p>
+                </button>
+                <button onclick="initQuiz(4)" class="glass p-8 rounded-[2rem] text-right hover:border-violet-500 transition-all">
+                    <span class="text-3xl mb-4 block">🔥</span>
+                    <h3 class="font-bold text-xl mb-2">اختبار الاهتمامات</h3>
+                    <p class="text-gray-500 text-sm">قتال، حب، أم ألغاز؟ اختر شغفك.</p>
+                </button>
+                <button onclick="initQuiz(5)" class="glass p-8 rounded-[2rem] text-right hover:border-violet-500 transition-all">
+                    <span class="text-3xl mb-4 block">🌌</span>
+                    <h3 class="font-bold text-xl mb-2">عالمك المفضل</h3>
+                    <p class="text-gray-500 text-sm">سحر، مستقبل، أم رعب مظلم؟</p>
+                </button>
+                <button onclick="initQuiz(7)" class="glass p-8 rounded-[2rem] text-right hover:border-violet-500 transition-all">
+                    <span class="text-3xl mb-4 block">⏱️</span>
+                    <h3 class="font-bold text-xl mb-2">اختبار الوقت</h3>
+                    <p class="text-gray-500 text-sm">كم تملك من وقت اليوم؟ لنحدد الطول المناسب.</p>
+                </button>
+                <button onclick="initQuiz(9)" class="glass p-8 rounded-[2rem] text-right hover:border-violet-500 transition-all border-dashed border-violet-500/50">
+                    <span class="text-3xl mb-4 block">⚡</span>
+                    <h3 class="font-bold text-xl mb-2">الاختبار السريع</h3>
+                    <p class="text-gray-500 text-sm">اكتشف أنميك في 10 ثوانٍ فقط.</p>
+                </button>
             </div>
         </div>
 
-        <div id="result-screen" class="hidden text-center fade-in">
-            <div class="glass p-12 rounded-[4rem] border-violet-500/30 relative overflow-hidden">
-                <div class="absolute -top-10 -right-10 w-40 h-40 bg-violet-600/20 blur-3xl"></div>
-                <h3 class="text-violet-400 font-bold tracking-widest uppercase mb-4">تم التحليل بنجاح! النتيجة هي:</h3>
-                <h2 id="result-title" class="text-5xl md:text-7xl font-black mb-6 neon-text">Interstellar</h2>
-                <p id="result-desc" class="text-gray-400 text-lg mb-10 leading-relaxed">بناءً على شخصيتك المحبة للاستكشاف والعمق الفلسفي، هذا العمل سيلمس مشاعرك بعمق.</p>
+        <div id="quiz-screen" class="section max-w-2xl mx-auto">
+            <div class="glass p-10 rounded-[3rem] border-violet-500/20">
+                <div class="flex justify-between mb-8 items-center">
+                    <h2 id="quiz-title" class="text-violet-400 font-bold uppercase tracking-widest text-sm">عنوان الاختبار</h2>
+                    <div id="progress-bar" class="h-1 bg-violet-600 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+                <h3 id="question-text" class="text-3xl font-bold mb-10 leading-tight">السؤال يظهر هنا؟</h3>
+                <div id="options-list" class="grid gap-4"></div>
+            </div>
+        </div>
+
+        <div id="result-screen" class="section text-center">
+            <div class="glass p-12 rounded-[4rem] border-violet-500/30">
+                <div id="personal-analysis" class="mb-8 p-6 bg-violet-600/10 rounded-3xl inline-block border border-violet-500/20">
+                    <h4 class="text-violet-400 font-bold mb-2">تحليل شخصيتك:</h4>
+                    <p id="analysis-text" class="text-lg">أنت شخص مغامر تحب التحدي.</p>
+                </div>
                 
+                <h2 class="text-gray-400 mb-4 tracking-widest uppercase text-sm">الترشيحات المقترحة لك:</h2>
+                
+                <div id="suggestions-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    </div>
+
                 <div class="flex flex-wrap justify-center gap-4">
-                    <button onclick="location.reload()" class="bg-white/5 border border-white/10 px-8 py-4 rounded-2xl hover:bg-white/10 transition">إعادة التحليل</button>
-                    <button class="bg-violet-600 px-8 py-4 rounded-2xl font-bold">مشاهدة الإعلان (Trailer)</button>
+                    <button onclick="location.reload()" class="bg-violet-600 px-10 py-4 rounded-2xl font-bold hover:scale-105 transition">جرب اختباراً آخر</button>
+                    <button class="bg-white/5 border border-white/10 px-10 py-4 rounded-2xl">مشاركة النتيجة</button>
                 </div>
             </div>
         </div>
@@ -75,101 +106,153 @@
     </main>
 
     <script>
-        const questions = [
+        // مصفوفة الاختبارات الـ 10
+        const allQuizzes = [
             {
-                q: "كيف تفضل قضاء ليلة عطلتك؟",
-                options: [
-                    { text: "مغامرة في مكان مجهول", type: "adventure" },
-                    { text: "حل لغز معقد أو قراءة كتاب", type: "mystery" },
-                    { text: "جلسة هادئة مع مشاعر عميقة", type: "drama" },
-                    { text: "تحدي ومنافسة مع الأصدقاء", type: "action" }
+                title: "شخصيتك العامة",
+                questions: [
+                    { q: "كيف تقضي وقت فراغك؟", options: [{t:"خروج مع الأصدقاء", v:"Action"}, {t:"القراءة أو التأمل", v:"Drama"}, {t:"حل الألغاز", v:"Mystery"}] },
+                    { q: "ماذا تفضل؟", options: [{t:"المغامرة", v:"Action"}, {t:"الراحة", v:"Drama"}] },
+                    { q: "تتصرف بـ؟", options: [{t:"عقلك", v:"Mystery"}, {t:"قلبك", v:"Drama"}] }
                 ]
             },
             {
-                q: "ما هو اللون الذي يمثل طاقتك الحالية؟",
-                options: [
-                    { text: "الأسود الغامض", type: "mystery" },
-                    { text: "الأحمر المشتعل", type: "action" },
-                    { text: "الأزرق الهادئ", type: "drama" },
-                    { text: "الذهبي المتفائل", type: "adventure" }
+                title: "كيف تشعر الآن؟",
+                questions: [
+                    { q: "مزاجك الحالي هو؟", options: [{t:"فرحان", v:"Comedy"}, {t:"حزين", v:"Drama"}, {t:"متوتر", v:"SliceOfLife"}, {t:"ممل", v:"Action"}] }
                 ]
             },
             {
-                q: "إذا كنت بطلاً في قصة، ما هي قوتك؟",
-                options: [
-                    { text: "الذكاء الخارق والتخطيط", type: "mystery" },
-                    { text: "القوة البدنية والسرعة", type: "action" },
-                    { text: "القدرة على شفاء الآخرين", type: "drama" },
-                    { text: "التنقل بين العوالم", type: "adventure" }
+                title: "نمط حياتك",
+                questions: [
+                    { q: "وقت نشاطك؟", options: [{t:"السهر", v:"Mystery"}, {t:"النوم بكري", v:"Action"}] },
+                    { q: "هوايتك؟", options: [{t:"الرياضة", v:"Sports"}, {t:"الإنترنت", v:"Sci-Fi"}] }
+                ]
+            },
+            {
+                title: "قراراتك الصعبة",
+                questions: [
+                    { q: "صديقك في خطر، ماذا تفعل؟", options: [{t:"أهجم فوراً", v:"Action"}, {t:"أخطط بذكاء", v:"Mystery"}, {t:"أبكي معه", v:"Drama"}] }
+                ]
+            },
+            {
+                title: "ماذا تحب أكثر؟",
+                questions: [
+                    { q: "اختر عنصرك المفضل:", options: [{t:"قتال", v:"Shonen"}, {t:"حب", v:"Romance"}, {t:"ألغاز", v:"Thriller"}, {t:"خيال", v:"Fantasy"}] }
+                ]
+            },
+            {
+                title: "أي عالم يعجبك؟",
+                questions: [
+                    { q: "أين تريد العيش؟", options: [{t:"عالم سحري", v:"Fantasy"}, {t:"عالم مستقبلي", v:"Sci-Fi"}, {t:"عالم واقعي", v:"Drama"}, {t:"عالم مظلم", v:"Horror"}] }
+                ]
+            },
+            {
+                title: "من أنت في الحقيقة؟",
+                questions: [
+                    { q: "هل تحب السيطرة؟", options: [{t:"نعم، أنا قائد", v:"Strategy"}, {t:"لا، أنا مسالم", v:"Comedy"}, {t:"أعمل في الظل", v:"Psychological"}] }
+                ]
+            },
+            {
+                title: "كم عندك وقت؟",
+                questions: [
+                    { q: "وقت المشاهدة المتاح؟", options: [{t:"أقل من ساعة", v:"Movie"}, {t:"ساعتين", v:"ShortAnime"}, {t:"يوم كامل", v:"LongSeries"}] }
+                ]
+            },
+            {
+                title: "ماذا تتوقع من القصة؟",
+                questions: [
+                    { q: "أهم شيء في العمل؟", options: [{t:"قصة قوية", v:"Mystery"}, {t:"شخصيات عميقة", v:"Drama"}, {t:"حماس وقتال", v:"Action"}] }
+                ]
+            },
+            {
+                title: "اختبار الـ 10 ثواني",
+                questions: [
+                    { q: "بسرعة: أكشن أم دراما؟", options: [{t:"أكشن", v:"Action"}, {t:"دراما", v:"Drama"}] }
                 ]
             }
         ];
 
-        const database = {
-            adventure: { title: "One Piece / Interstellar", desc: "أنت شخص لا يعرف الحدود، تبحث دائماً عن الحقيقة فيما وراء الأفق. هذا العمل هو مرآتك." },
-            mystery: { title: "Death Note / Inception", desc: "عقلك لا يتوقف عن العمل. تعشق التفاصيل والخطط المعقدة. ستبهرك هذه القصة." },
-            action: { title: "Attack on Titan / John Wick", desc: "أنت شخص حاسم، تحب الإثارة وتواجه التحديات مباشرة. استعد لجرعة أدرينالين لا تنتهي." },
-            drama: { title: "Your Lie in April / The Pursuit of Happyness", desc: "تملك قلباً حساساً وتقدر الروابط الإنسانية العميقة. استعد لرحلة عاطفية فريدة." }
+        // قاعدة بيانات النتائج (الأنميات والوصف)
+        const resultsDB = {
+            Action: { analysis: "أنت شخص شجاع ومغامر، تحب الإثارة والتحدي.", suggestions: ["Attack on Titan", "Jujutsu Kaisen", "Vinland Saga"] },
+            Drama: { analysis: "شخصيتك عاطفية وعميقة، تقدر المشاعر والروابط الإنسانية.", suggestions: ["Your Lie in April", "A Silent Voice", "Violet Evergarden"] },
+            Mystery: { analysis: "أنت ذكي، حذر، وتعشق تحليل التفاصيل المعقدة.", suggestions: ["Death Note", "Monster", "Steins;Gate"] },
+            Comedy: { analysis: "أنت شخص مرح تحب نشر البهجة والضحك.", suggestions: ["One Punch Man", "Gintama", "Spy x Family"] },
+            Fantasy: { analysis: "خيالك واسع وتحب الهروب إلى عوالم سحرية.", suggestions: ["Frieren", "Fullmetal Alchemist", "Hunter x Hunter"] },
+            Horror: { analysis: "تحب الغموض المظلم والأجواء المرعبة.", suggestions: ["Another", "Berserk", "Tokyo Ghoul"] },
+            SciFi: { analysis: "تفكيرك مستقبلي وتهتم بالتكنولوجيا والعوالم المتطورة.", suggestions: ["Psycho-Pass", "Code Geass", "Cyberpunk Edgerunners"] },
+            Movie: { analysis: "وقتك ضيق لكنك تريد تجربة مكثفة.", suggestions: ["Spirited Away", "Your Name", "Suzume"] },
+            LongSeries: { analysis: "أنت شخص وفيّ للقصص الطويلة الملحمية.", suggestions: ["One Piece", "Naruto", "Bleach"] },
+            Shonen: { analysis: "تحب روح المنافسة والتطور المستمر.", suggestions: ["Demon Slayer", "Black Clover", "My Hero Academia"] }
         };
 
-        let currentStep = 0;
-        let scores = { adventure: 0, mystery: 0, action: 0, drama: 0 };
+        let currentQuiz = null;
+        let step = 0;
+        let userChoice = "";
 
-        function startQuiz() {
-            document.getElementById('start-screen').classList.add('hidden');
-            document.getElementById('quiz-screen').classList.remove('hidden');
-            showQuestion();
+        function initQuiz(index) {
+            currentQuiz = allQuizzes[index];
+            step = 0;
+            document.getElementById('home-screen').classList.remove('active');
+            document.getElementById('quiz-screen').classList.add('active');
+            document.getElementById('quiz-title').innerText = currentQuiz.title;
+            renderQuestion();
         }
 
-        function showQuestion() {
-            const q = questions[currentStep];
+        function renderQuestion() {
+            const q = currentQuiz.questions[step];
             document.getElementById('question-text').innerText = q.q;
-            document.getElementById('progress-text').innerText = `السؤال ${currentStep + 1} من ${questions.length}`;
-            document.getElementById('progress-bar').style.width = ((currentStep + 1) / questions.length * 100) + '%';
-
-            const container = document.getElementById('options-container');
-            container.innerHTML = '';
+            document.getElementById('progress-bar').style.width = ((step + 1) / currentQuiz.questions.length * 100) + '%';
+            
+            const list = document.getElementById('options-list');
+            list.innerHTML = '';
             q.options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "glass p-6 rounded-2xl text-right hover:border-violet-500 transition-all hover:bg-violet-600/10 font-bold";
-                btn.innerText = opt.text;
-                btn.onclick = () => nextStep(opt.type);
-                container.appendChild(btn);
+                const b = document.createElement('button');
+                b.className = "btn-opt p-6 rounded-2xl text-right font-bold text-lg";
+                b.innerText = opt.t;
+                b.onclick = () => handleChoice(opt.v);
+                list.appendChild(b);
             });
         }
 
-        function nextStep(type) {
-            scores[type]++;
-            currentStep++;
-            if (currentStep < questions.length) {
-                showQuestion();
+        function handleChoice(val) {
+            userChoice = val; // نأخذ آخر اختيار كمؤشر رئيسي للنتيجة
+            step++;
+            if(step < currentQuiz.questions.length) {
+                renderQuestion();
             } else {
-                showResult();
+                showFinalResult();
             }
         }
 
-        function showResult() {
-            document.getElementById('quiz-screen').classList.add('hidden');
-            document.getElementById('result-screen').classList.remove('hidden');
-
-            // تحديد النوع الأعلى تصويتاً
-            const winner = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
-            const res = database[winner];
+        function showFinalResult() {
+            document.getElementById('quiz-screen').classList.remove('active');
+            document.getElementById('result-screen').classList.add('active');
             
-            document.getElementById('result-title').innerText = res.title;
-            document.getElementById('result-desc').innerText = res.desc;
+            const res = resultsDB[userChoice] || resultsDB["Action"];
+            document.getElementById('analysis-text').innerText = res.analysis;
+            
+            const grid = document.getElementById('suggestions-grid');
+            grid.innerHTML = '';
+            res.suggestions.forEach(name => {
+                grid.innerHTML += `
+                    <div class="glass p-6 rounded-3xl border-violet-500/10 hover:border-violet-500 transition cursor-pointer">
+                        <div class="w-full h-40 bg-violet-600/20 rounded-2xl mb-4 flex items-center justify-center text-4xl">🎬</div>
+                        <h4 class="font-bold text-xl text-violet-400">${name}</h4>
+                    </div>
+                `;
+            });
         }
 
         // إنشاء النجوم في الخلفية
-        for (let i = 0; i < 150; i++) {
+        for (let i = 0; i < 100; i++) {
             const star = document.createElement('div');
             star.className = 'star';
-            const size = Math.random() * 3;
-            star.style.width = size + 'px';
-            star.style.height = size + 'px';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 100 + '%';
-            star.style.animationDelay = Math.random() * 3 + 's';
+            const size = Math.random() * 2 + 1;
+            star.style.width = size + 'px'; star.style.height = size + 'px';
+            star.style.left = Math.random() * 100 + '%'; star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 5 + 's';
             document.getElementById('star-field').appendChild(star);
         }
     </script>
