@@ -1,83 +1,125 @@
-import { Globe, Instagram, Linkedin, Twitter } from 'lucide-react';
-import { useState } from 'react';
+import { Globe, Instagram, Linkedin, Twitter, Plus } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
-export default function Footer() {
-  const [lang, setLang] = useState('EN');
+// --- مكون الفقاعات المتحركة (Background Animation) ---
+const BubbleBackground = () => {
+  return (
+    <div className="fixed inset-0 -z-10 overflow-hidden bg-black">
+      {[...Array(15)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute rounded-full bg-violet-600/10 blur-3xl animate-pulse"
+          style={{
+            width: `${Math.random() * 400 + 200}px`,
+            height: `${Math.random() * 400 + 200}px`,
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 5}s`,
+            animationDuration: `${Math.random() * 10 + 5}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+export default function MedicalSite() {
+  const [lang, setLang] = useState('AR');
 
   return (
-    <footer className="pt-24 pb-12 px-6 border-t border-white/5 bg-luxury-black">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
-          <div className="md:col-span-2">
-            <div className="flex items-center gap-2 mb-8">
-              <div className="w-10 h-10 rounded-xl bg-violet-primary flex items-center justify-center shadow-lg shadow-violet-primary/20">
-                <span className="font-display font-bold text-white text-xl">L</span>
-              </div>
-              <span className="font-sans text-2xl font-bold tracking-tight uppercase text-white">Lumina <span className="text-violet-light">Medical</span></span>
+    <div className="min-h-screen text-white selection:bg-violet-500/30">
+      <BubbleBackground />
+
+      {/* --- قسم الهيرو (Hero Section) المضاف لتشغيل الموقع --- */}
+      <nav className="flex justify-between items-center p-8 max-w-7xl mx-auto">
+         <div className="flex items-center gap-2">
+            <div className="w-10 h-10 rounded-xl bg-violet-600 flex items-center justify-center shadow-lg">
+                <span className="font-bold text-white text-xl">L</span>
             </div>
-            <p className="text-gray-400 max-w-sm text-lg leading-relaxed mb-10">
-              Defining the next generation of healthcare luxury and medical excellence. 
-              London's premier multi-specialty institution.
+            <span className="text-2xl font-bold uppercase tracking-tight">Lumina <span className="text-violet-400">Medical</span></span>
+         </div>
+         <button className="bg-violet-600 hover:bg-violet-700 px-6 py-2 rounded-full font-bold text-sm transition-all shadow-lg shadow-violet-600/20">
+            حجز موعد الآن
+         </button>
+      </nav>
+
+      <main className="max-w-7xl mx-auto px-6 py-20 text-center">
+        <h1 className="text-6xl md:text-8xl font-bold mb-6 tracking-tighter">
+          مستقبل <span className="text-violet-500">الرعاية</span> الطبية
+        </h1>
+        <p className="text-gray-400 text-xl max-w-2xl mx-auto mb-10">
+          تجربة صحية عالمية تجمع بين الفخامة وأحدث تقنيات الذكاء الاصطناعي في قلب لندن.
+        </p>
+      </main>
+
+      {/* --- التذييل (Footer) بعد التعديل ليعمل بشكل صحيح --- */}
+      <footer className="pt-24 pb-12 px-6 border-t border-white/5 bg-black/50 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
+            <div className="md:col-span-2">
+              <div className="flex items-center gap-2 mb-8">
+                <div className="w-10 h-10 rounded-xl bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-600/20">
+                  <span className="font-bold text-white text-xl">L</span>
+                </div>
+                <span className="text-2xl font-bold tracking-tight uppercase text-white">Lumina <span className="text-violet-400">Medical</span></span>
+              </div>
+              <p className="text-gray-400 max-w-sm text-lg leading-relaxed mb-10">
+                تعريف الجيل القادم من الفخامة الصحية والتميز الطبي. المؤسسة الرائدة في تقديم الخدمات المتعددة.
+              </p>
+              <div className="flex items-center gap-6">
+                {[Instagram, Twitter, Linkedin].map((Icon, index) => (
+                  <div key={index} className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-500 hover:text-violet-400 hover:border-violet-600 transition-all cursor-pointer bg-white/5">
+                    <Icon className="w-5 h-5" />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mb-8">الأقسام</h4>
+              <ul className="space-y-4">
+                {['الرئيسية', 'الخدمات', 'الأطباء', 'جولة افتراضية', 'بوابة المريض'].map((item) => (
+                  <li key={item}>
+                    <a href="#" className="text-sm text-gray-400 hover:text-violet-400 transition-colors">{item}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mb-8">الدعم</h4>
+              <ul className="space-y-4">
+                {['اتصل بنا', 'سياسة الخصوصية', 'الشروط والأحكام', 'الحقوق'].map((item) => (
+                  <li key={item}>
+                    <a href="#" className="text-sm text-gray-400 hover:text-violet-400 transition-colors">{item}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+            <p className="text-[10px] text-gray-600 font-medium tracking-widest uppercase">
+              © 2026 LUMINA MEDICAL GROUP. جميع الحقوق محفوظة.
             </p>
-            <div className="flex items-center gap-6">
-              <div className="w-10 h-10 rounded-full glass border border-white/10 flex items-center justify-center text-gray-500 hover:text-violet-light hover:border-violet-primary transition-all cursor-pointer">
-                <Instagram className="w-5 h-5" />
-              </div>
-              <div className="w-10 h-10 rounded-full glass border border-white/10 flex items-center justify-center text-gray-500 hover:text-violet-light hover:border-violet-primary transition-all cursor-pointer">
-                <Twitter className="w-5 h-5" />
-              </div>
-              <div className="w-10 h-10 rounded-full glass border border-white/10 flex items-center justify-center text-gray-500 hover:text-violet-light hover:border-violet-primary transition-all cursor-pointer">
-                <Linkedin className="w-5 h-5" />
-              </div>
-            </div>
-          </div>
 
-          <div>
-            <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mb-8 font-sans">Platforms</h4>
-            <ul className="space-y-4">
-              {['Home', 'Services', 'Specialists', 'Virtual Tour', 'Portal'].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-sm text-gray-400 hover:text-violet-light transition-colors">{item}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mb-8 font-sans">Support</h4>
-            <ul className="space-y-4">
-              {['Contact Us', 'Privacy Policy', 'Terms', 'Rights'].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-sm text-gray-400 hover:text-violet-light transition-colors">{item}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
-          <p className="text-[10px] text-gray-600 font-medium tracking-widest uppercase">
-            © 2026 LUMINA MEDICAL GROUP. ALL RIGHTS RESERVED.
-          </p>
-
-          <div className="flex items-center gap-8">
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full glass border border-white/10">
-                <Globe className="w-3.5 h-3.5 text-violet-light" />
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+                <Globe className="w-3.5 h-3.5 text-violet-400" />
                 <select 
                   value={lang} 
                   onChange={(e) => setLang(e.target.value)}
                   className="bg-transparent text-[10px] uppercase font-bold tracking-widest text-gray-400 outline-none cursor-pointer"
                 >
-                  <option value="EN">English</option>
-                  <option value="DE">Deutsch</option>
-                  <option value="FR">Français</option>
+                  <option className="bg-black" value="AR">العربية</option>
+                  <option className="bg-black" value="EN">English</option>
+                  <option className="bg-black" value="FR">Français</option>
                 </select>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </footer>
+      </footer>
+    </div>
   );
 }
