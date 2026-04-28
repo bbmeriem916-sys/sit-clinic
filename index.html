@@ -1,152 +1,138 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="main-html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lumina Medical | عيادة لومينا الطبية</title>
+    <title>Lumina Medical | عيادة لومينا المتطورة</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            background-color: #050505;
-            color: white;
-            font-family: 'Cairo', sans-serif;
-            overflow-x: hidden;
-        }
-
-        /* تأثير الفقاعات المتحركة */
-        .bubbles {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            filter: blur(80px);
-        }
-
-        .bubble {
-            position: absolute;
-            background: #7c3aed;
-            border-radius: 50%;
-            opacity: 0.15;
-            animation: move 15s infinite alternate ease-in-out;
-        }
-
-        @keyframes move {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(100px, 100px); }
-        }
-
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .text-gradient {
-            background: linear-gradient(to right, #a78bfa, #7c3aed);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        :root { --primary: #7c3aed; }
+        body { background: #050505; color: white; font-family: 'Cairo', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
+        .bubbles { position: fixed; inset: 0; z-index: -1; filter: blur(80px); }
+        .bubble { position: absolute; background: var(--primary); border-radius: 50%; opacity: 0.15; animation: move 15s infinite alternate ease-in-out; }
+        @keyframes move { 0% { transform: translate(0, 0); } 100% { transform: translate(120px, 120px); } }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .text-gradient { background: linear-gradient(to right, #a78bfa, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* Modal Style */
+        #booking-modal { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
+        #booking-modal.active { display: flex; }
     </style>
 </head>
 <body>
 
     <div class="bubbles" id="bubble-container"></div>
 
-    <nav class="flex justify-between items-center p-6 max-w-7xl mx-auto sticky top-0 z-50 glass mt-4 rounded-2xl">
+    <div id="booking-modal">
+        <div class="glass p-8 rounded-3xl w-full max-w-md mx-4 relative">
+            <button onclick="toggleModal()" class="absolute top-4 left-4 text-gray-400 hover:text-white">✕</button>
+            <h2 class="text-2xl font-bold mb-6 text-gradient" id="modal-title">حجز موعد جديد</h2>
+            <form class="space-y-4" onsubmit="event.preventDefault(); alert('تم استلام طلبك بنجاح!')">
+                <input type="text" placeholder="الاسم الكامل" class="w-full bg-white/5 border border-white/10 p-3 rounded-xl outline-none focus:border-violet-500 transition">
+                <input type="tel" placeholder="رقم الهاتف" class="w-full bg-white/5 border border-white/10 p-3 rounded-xl outline-none focus:border-violet-500 transition">
+                <select class="w-full bg-black border border-white/10 p-3 rounded-xl outline-none focus:border-violet-500 transition">
+                    <option>اختر التخصص</option>
+                    <option>القلب والأوعية الدموية</option>
+                    <option>طب الأسنان التجميلي</option>
+                    <option>الجراحة العامة</option>
+                </select>
+                <button type="submit" class="w-full bg-violet-600 py-3 rounded-xl font-bold shadow-lg shadow-violet-600/30 hover:bg-violet-700 transition">تأكيد الحجز</button>
+            </form>
+        </div>
+    </div>
+
+    <nav class="flex justify-between items-center p-6 max-w-7xl mx-auto sticky top-0 z-50 glass mt-4 rounded-2xl mx-4">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-600/40">
                 <span class="font-bold text-white text-xl">L</span>
             </div>
             <span class="text-xl font-bold tracking-tight">LUMINA <span class="text-violet-400">MEDICAL</span></span>
         </div>
-        <div class="hidden md:flex gap-8 text-sm font-medium">
-            <a href="#" class="hover:text-violet-400 transition">الرئيسية</a>
-            <a href="#" class="hover:text-violet-400 transition">الخدمات</a>
-            <a href="#" class="hover:text-violet-400 transition">الأطباء</a>
-            <a href="#" class="hover:text-violet-400 transition">جولة افتراضية</a>
+        <div class="hidden md:flex gap-8 text-sm font-medium" id="nav-links">
+            <a href="#home" class="hover:text-violet-400 transition">الرئيسية</a>
+            <a href="#services" class="hover:text-violet-400 transition">الخدمات</a>
+            <a href="#doctors" class="hover:text-violet-400 transition">الأطباء</a>
         </div>
-        <button class="bg-violet-600 hover:bg-violet-700 text-white px-6 py-2.5 rounded-full font-bold text-sm transition-all shadow-lg shadow-violet-600/20">
+        <button onclick="toggleModal()" class="bg-violet-600 hover:bg-violet-700 text-white px-6 py-2.5 rounded-full font-bold text-sm transition-all shadow-lg shadow-violet-600/20">
             حجز موعد
         </button>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-6 py-32 text-center">
-        <h1 class="text-5xl md:text-8xl font-bold mb-8 tracking-tighter leading-tight">
-            مستقبل الرعاية <br> <span class="text-gradient">الطبية العالمية</span>
+    <section id="home" class="max-w-7xl mx-auto px-6 py-28 text-center">
+        <h1 class="text-5xl md:text-8xl font-bold mb-8 tracking-tighter leading-tight" id="hero-title">
+            رعاية طبية <br> <span class="text-gradient">تليق بك</span>
         </h1>
-        <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-12">
-            عيادة لومينا تقدم تجربة صحية فاخرة تجمع بين دقة الذكاء الاصطناعي وراحة المريض، بمعايير عالمية في تصميمها وخدماتها.
+        <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-12" id="hero-desc">
+            نجمع بين تكنولوجيا الذكاء الاصطناعي التشخيصي وأرقى معايير الضيافة الطبية في مكان واحد.
         </p>
-        
-        <div class="flex flex-wrap justify-center gap-4">
-            <div class="glass p-6 rounded-3xl w-64">
-                <h3 class="text-violet-400 font-bold text-2xl mb-2">3D Tour</h3>
-                <p class="text-gray-500 text-sm">استكشف العيادة عبر جولة افتراضية ذكية</p>
+        <div class="flex flex-wrap justify-center gap-6">
+            <div class="glass p-8 rounded-[2rem] w-72 hover:border-violet-500/50 transition cursor-pointer group" id="services">
+                <div class="w-12 h-12 bg-violet-600/20 rounded-full mb-4 flex items-center justify-center group-hover:bg-violet-600 transition">✨</div>
+                <h3 class="text-white font-bold text-xl mb-2">خدمات عالمية</h3>
+                <p class="text-gray-500 text-sm">أحدث الأجهزة والتقنيات الطبية بين يديك.</p>
             </div>
-            <div class="glass p-6 rounded-3xl w-64 border-violet-500/30">
-                <h3 class="text-violet-400 font-bold text-2xl mb-2">AI Diagnosis</h3>
-                <p class="text-gray-500 text-sm">تشخيص دقيق مدعوم بالذكاء الاصطناعي</p>
+            <div class="glass p-8 rounded-[2rem] w-72 hover:border-violet-500/50 transition cursor-pointer group" id="doctors">
+                <div class="w-12 h-12 bg-violet-600/20 rounded-full mb-4 flex items-center justify-center group-hover:bg-violet-600 transition">👨‍⚕️</div>
+                <h3 class="text-white font-bold text-xl mb-2">نخبة الأطباء</h3>
+                <p class="text-gray-500 text-sm">فريق طبي متخصص من جميع أنحاء العالم.</p>
             </div>
         </div>
-    </main>
+    </section>
 
-    <footer class="pt-24 pb-12 px-6 border-t border-white/5 mt-20">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20 text-right">
-                <div class="md:col-span-2">
-                    <div class="flex items-center gap-2 mb-8">
-                        <div class="w-10 h-10 rounded-xl bg-violet-600 flex items-center justify-center">
-                            <span class="font-bold text-white text-xl">L</span>
-                        </div>
-                        <span class="text-2xl font-bold text-white uppercase">Lumina <span class="text-violet-400">Medical</span></span>
-                    </div>
-                    <p class="text-gray-400 max-w-sm text-lg leading-relaxed mb-10">
-                        المؤسسة الرائدة في تقديم الفخامة الطبية والحلول التقنية المتطورة.
-                    </p>
-                </div>
-
-                <div>
-                    <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-8">الأقسام</h4>
-                    <ul class="space-y-4 text-gray-400 text-sm">
-                        <li><a href="#" class="hover:text-violet-400 transition">الخدمات الطبية</a></li>
-                        <li><a href="#" class="hover:text-violet-400 transition">فريق الأطباء</a></li>
-                        <li><a href="#" class="hover:text-violet-400 transition">الجولة الافتراضية</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-8">اللغة</h4>
-                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass">
-                        <select class="bg-transparent text-xs font-bold uppercase text-gray-400 outline-none">
-                            <option value="AR">العربية</option>
-                            <option value="EN">English</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="pt-8 border-t border-white/5 text-center">
-                <p class="text-[10px] text-gray-600 tracking-widest uppercase">
-                    © 2026 LUMINA MEDICAL GROUP. جميع الحقوق محفوظة.
-                </p>
+    <footer class="pt-20 pb-10 px-6 border-t border-white/5">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <p class="text-xs text-gray-500 tracking-widest uppercase">© 2026 LUMINA MEDICAL GROUP</p>
+            <div class="flex items-center gap-4">
+                <select onchange="changeLang(this.value)" class="bg-white/5 border border-white/10 text-xs px-4 py-2 rounded-full outline-none cursor-pointer hover:border-violet-500 transition">
+                    <option value="AR">العربية</option>
+                    <option value="EN">English</option>
+                </select>
             </div>
         </div>
     </footer>
 
     <script>
-        // كود إنشاء الفقاعات بشكل عشوائي
+        // 1. إنشاء الفقاعات المتحركة
         const container = document.getElementById('bubble-container');
         for (let i = 0; i < 15; i++) {
             const bubble = document.createElement('div');
             bubble.className = 'bubble';
-            const size = Math.random() * 400 + 200;
-            bubble.style.width = size + 'px';
-            bubble.style.height = size + 'px';
-            bubble.style.left = Math.random() * 100 + '%';
-            bubble.style.top = Math.random() * 100 + '%';
+            const size = Math.random() * 400 + 150;
+            bubble.style.width = size + 'px'; bubble.style.height = size + 'px';
+            bubble.style.left = Math.random() * 100 + '%'; bubble.style.top = Math.random() * 100 + '%';
             bubble.style.animationDelay = Math.random() * 5 + 's';
-            bubble.style.animationDuration = (Math.random() * 10 + 10) + 's';
             container.appendChild(bubble);
+        }
+
+        // 2. التحكم في نافذة الحجز
+        function toggleModal() {
+            document.getElementById('booking-modal').classList.toggle('active');
+        }
+
+        // 3. نظام تغيير اللغة
+        const content = {
+            AR: {
+                title: "رعاية طبية تليق بك",
+                desc: "نجمع بين تكنولوجيا الذكاء الاصطناعي التشخيصي وأرقى معايير الضيافة الطبية في مكان واحد.",
+                modal: "حجز موعد جديد",
+                dir: "rtl"
+            },
+            EN: {
+                title: "Healthcare That Fits You",
+                desc: "We combine diagnostic AI technology with the highest standards of medical hospitality in one place.",
+                modal: "Book New Appointment",
+                dir: "ltr"
+            }
+        };
+
+        function changeLang(lang) {
+            const data = content[lang];
+            document.getElementById('hero-title').innerHTML = data.title;
+            document.getElementById('hero-desc').innerText = data.desc;
+            document.getElementById('modal-title').innerText = data.modal;
+            document.getElementById('main-html').dir = data.dir;
+            document.getElementById('main-html').lang = lang.toLowerCase();
         }
     </script>
 </body>
