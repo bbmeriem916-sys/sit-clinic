@@ -1,125 +1,153 @@
-import { Globe, Instagram, Linkedin, Twitter, Plus } from 'lucide-react';
-import { useState, useEffect } from 'react';
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumina Medical | عيادة لومينا الطبية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #050505;
+            color: white;
+            font-family: 'Cairo', sans-serif;
+            overflow-x: hidden;
+        }
 
-// --- مكون الفقاعات المتحركة (Background Animation) ---
-const BubbleBackground = () => {
-  return (
-    <div className="fixed inset-0 -z-10 overflow-hidden bg-black">
-      {[...Array(15)].map((_, i) => (
-        <div
-          key={i}
-          className="absolute rounded-full bg-violet-600/10 blur-3xl animate-pulse"
-          style={{
-            width: `${Math.random() * 400 + 200}px`,
-            height: `${Math.random() * 400 + 200}px`,
-            top: `${Math.random() * 100}%`,
-            left: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 5}s`,
-            animationDuration: `${Math.random() * 10 + 5}s`,
-          }}
-        />
-      ))}
-    </div>
-  );
-};
+        /* تأثير الفقاعات المتحركة */
+        .bubbles {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            filter: blur(80px);
+        }
 
-export default function MedicalSite() {
-  const [lang, setLang] = useState('AR');
+        .bubble {
+            position: absolute;
+            background: #7c3aed;
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: move 15s infinite alternate ease-in-out;
+        }
 
-  return (
-    <div className="min-h-screen text-white selection:bg-violet-500/30">
-      <BubbleBackground />
+        @keyframes move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(100px, 100px); }
+        }
 
-      {/* --- قسم الهيرو (Hero Section) المضاف لتشغيل الموقع --- */}
-      <nav className="flex justify-between items-center p-8 max-w-7xl mx-auto">
-         <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-violet-600 flex items-center justify-center shadow-lg">
-                <span className="font-bold text-white text-xl">L</span>
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .text-gradient {
+            background: linear-gradient(to right, #a78bfa, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bubbles" id="bubble-container"></div>
+
+    <nav class="flex justify-between items-center p-6 max-w-7xl mx-auto sticky top-0 z-50 glass mt-4 rounded-2xl">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-600/40">
+                <span class="font-bold text-white text-xl">L</span>
             </div>
-            <span className="text-2xl font-bold uppercase tracking-tight">Lumina <span className="text-violet-400">Medical</span></span>
-         </div>
-         <button className="bg-violet-600 hover:bg-violet-700 px-6 py-2 rounded-full font-bold text-sm transition-all shadow-lg shadow-violet-600/20">
-            حجز موعد الآن
-         </button>
-      </nav>
-
-      <main className="max-w-7xl mx-auto px-6 py-20 text-center">
-        <h1 className="text-6xl md:text-8xl font-bold mb-6 tracking-tighter">
-          مستقبل <span className="text-violet-500">الرعاية</span> الطبية
-        </h1>
-        <p className="text-gray-400 text-xl max-w-2xl mx-auto mb-10">
-          تجربة صحية عالمية تجمع بين الفخامة وأحدث تقنيات الذكاء الاصطناعي في قلب لندن.
-        </p>
-      </main>
-
-      {/* --- التذييل (Footer) بعد التعديل ليعمل بشكل صحيح --- */}
-      <footer className="pt-24 pb-12 px-6 border-t border-white/5 bg-black/50 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
-            <div className="md:col-span-2">
-              <div className="flex items-center gap-2 mb-8">
-                <div className="w-10 h-10 rounded-xl bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-600/20">
-                  <span className="font-bold text-white text-xl">L</span>
-                </div>
-                <span className="text-2xl font-bold tracking-tight uppercase text-white">Lumina <span className="text-violet-400">Medical</span></span>
-              </div>
-              <p className="text-gray-400 max-w-sm text-lg leading-relaxed mb-10">
-                تعريف الجيل القادم من الفخامة الصحية والتميز الطبي. المؤسسة الرائدة في تقديم الخدمات المتعددة.
-              </p>
-              <div className="flex items-center gap-6">
-                {[Instagram, Twitter, Linkedin].map((Icon, index) => (
-                  <div key={index} className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-500 hover:text-violet-400 hover:border-violet-600 transition-all cursor-pointer bg-white/5">
-                    <Icon className="w-5 h-5" />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mb-8">الأقسام</h4>
-              <ul className="space-y-4">
-                {['الرئيسية', 'الخدمات', 'الأطباء', 'جولة افتراضية', 'بوابة المريض'].map((item) => (
-                  <li key={item}>
-                    <a href="#" className="text-sm text-gray-400 hover:text-violet-400 transition-colors">{item}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mb-8">الدعم</h4>
-              <ul className="space-y-4">
-                {['اتصل بنا', 'سياسة الخصوصية', 'الشروط والأحكام', 'الحقوق'].map((item) => (
-                  <li key={item}>
-                    <a href="#" className="text-sm text-gray-400 hover:text-violet-400 transition-colors">{item}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
-            <p className="text-[10px] text-gray-600 font-medium tracking-widest uppercase">
-              © 2026 LUMINA MEDICAL GROUP. جميع الحقوق محفوظة.
-            </p>
-
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
-                <Globe className="w-3.5 h-3.5 text-violet-400" />
-                <select 
-                  value={lang} 
-                  onChange={(e) => setLang(e.target.value)}
-                  className="bg-transparent text-[10px] uppercase font-bold tracking-widest text-gray-400 outline-none cursor-pointer"
-                >
-                  <option className="bg-black" value="AR">العربية</option>
-                  <option className="bg-black" value="EN">English</option>
-                  <option className="bg-black" value="FR">Français</option>
-                </select>
-              </div>
-            </div>
-          </div>
+            <span class="text-xl font-bold tracking-tight">LUMINA <span class="text-violet-400">MEDICAL</span></span>
         </div>
-      </footer>
-    </div>
-  );
-}
+        <div class="hidden md:flex gap-8 text-sm font-medium">
+            <a href="#" class="hover:text-violet-400 transition">الرئيسية</a>
+            <a href="#" class="hover:text-violet-400 transition">الخدمات</a>
+            <a href="#" class="hover:text-violet-400 transition">الأطباء</a>
+            <a href="#" class="hover:text-violet-400 transition">جولة افتراضية</a>
+        </div>
+        <button class="bg-violet-600 hover:bg-violet-700 text-white px-6 py-2.5 rounded-full font-bold text-sm transition-all shadow-lg shadow-violet-600/20">
+            حجز موعد
+        </button>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-6 py-32 text-center">
+        <h1 class="text-5xl md:text-8xl font-bold mb-8 tracking-tighter leading-tight">
+            مستقبل الرعاية <br> <span class="text-gradient">الطبية العالمية</span>
+        </h1>
+        <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-12">
+            عيادة لومينا تقدم تجربة صحية فاخرة تجمع بين دقة الذكاء الاصطناعي وراحة المريض، بمعايير عالمية في تصميمها وخدماتها.
+        </p>
+        
+        <div class="flex flex-wrap justify-center gap-4">
+            <div class="glass p-6 rounded-3xl w-64">
+                <h3 class="text-violet-400 font-bold text-2xl mb-2">3D Tour</h3>
+                <p class="text-gray-500 text-sm">استكشف العيادة عبر جولة افتراضية ذكية</p>
+            </div>
+            <div class="glass p-6 rounded-3xl w-64 border-violet-500/30">
+                <h3 class="text-violet-400 font-bold text-2xl mb-2">AI Diagnosis</h3>
+                <p class="text-gray-500 text-sm">تشخيص دقيق مدعوم بالذكاء الاصطناعي</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="pt-24 pb-12 px-6 border-t border-white/5 mt-20">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20 text-right">
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-2 mb-8">
+                        <div class="w-10 h-10 rounded-xl bg-violet-600 flex items-center justify-center">
+                            <span class="font-bold text-white text-xl">L</span>
+                        </div>
+                        <span class="text-2xl font-bold text-white uppercase">Lumina <span class="text-violet-400">Medical</span></span>
+                    </div>
+                    <p class="text-gray-400 max-w-sm text-lg leading-relaxed mb-10">
+                        المؤسسة الرائدة في تقديم الفخامة الطبية والحلول التقنية المتطورة.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-8">الأقسام</h4>
+                    <ul class="space-y-4 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-violet-400 transition">الخدمات الطبية</a></li>
+                        <li><a href="#" class="hover:text-violet-400 transition">فريق الأطباء</a></li>
+                        <li><a href="#" class="hover:text-violet-400 transition">الجولة الافتراضية</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-8">اللغة</h4>
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass">
+                        <select class="bg-transparent text-xs font-bold uppercase text-gray-400 outline-none">
+                            <option value="AR">العربية</option>
+                            <option value="EN">English</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-white/5 text-center">
+                <p class="text-[10px] text-gray-600 tracking-widest uppercase">
+                    © 2026 LUMINA MEDICAL GROUP. جميع الحقوق محفوظة.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // كود إنشاء الفقاعات بشكل عشوائي
+        const container = document.getElementById('bubble-container');
+        for (let i = 0; i < 15; i++) {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            const size = Math.random() * 400 + 200;
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+            bubble.style.left = Math.random() * 100 + '%';
+            bubble.style.top = Math.random() * 100 + '%';
+            bubble.style.animationDelay = Math.random() * 5 + 's';
+            bubble.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            container.appendChild(bubble);
+        }
+    </script>
+</body>
+</html>
