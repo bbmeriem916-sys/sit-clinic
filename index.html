@@ -1,235 +1,226 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="main-html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AnimeMatch Ultra Pro | 2026</title>
+    <title>AnimeMatch AI | Global Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --p: #8b5cf6; --bg: #020004; }
-        body { 
-            background: var(--bg); 
-            color: white; 
-            font-family: 'Cairo', sans-serif; 
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
-        }
+        body { background: var(--bg); color: white; font-family: 'Cairo', 'Outfit', sans-serif; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
         
-        /* تحسين مظهر الموبايل */
-        @media (max-width: 768px) {
-            .main-container { padding: 1rem; }
-            h1 { font-size: 3.5rem !important; }
-            .glass { padding: 1.5rem !important; border-radius: 2rem !important; }
-        }
-
-        .glass { 
-            background: rgba(255, 255, 255, 0.03); 
-            backdrop-filter: blur(25px); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-
-        .neon-border { border-color: rgba(139, 92, 246, 0.5); box-shadow: 0 0 20px rgba(139, 92, 246, 0.2); }
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .neon-shadow { box-shadow: 0 0 30px rgba(139, 92, 246, 0.2); }
         
-        /* نجوم متحركة */
-        .stars-container { position: fixed; inset: 0; z-index: -1; }
-        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: twinkle var(--d) infinite; }
-        @keyframes twinkle { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } }
+        /* تأثيرات الخلفية المتحركة */
+        .stars-bg { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at center, #0f0524 0%, #020004 100%); }
+        .moving-blob { position: absolute; width: 400px; height: 400px; background: var(--p); filter: blur(150px); opacity: 0.1; border-radius: 50%; animation: float 15s infinite alternate; }
+        @keyframes float { from { transform: translate(-20%, -20%); } to { transform: translate(120%, 120%); } }
 
-        /* حركات الأقسام */
-        .section { display: none; opacity: 0; transform: scale(0.95); transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
-        .section.active { display: block; opacity: 1; transform: scale(1); }
+        /* الانتقالات */
+        .page-node { display: none; opacity: 0; transform: translateY(30px) scale(0.98); transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1); }
+        .page-node.active { display: block; opacity: 1; transform: translateY(0) scale(1); }
 
-        .btn-option {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-option:active { transform: scale(0.95); }
-        .btn-option:hover { background: rgba(139, 92, 246, 0.2); border-color: var(--p); padding-right: 2.5rem; }
+        .option-card { cursor: pointer; transition: 0.4s; position: relative; overflow: hidden; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); }
+        .option-card:hover { border-color: var(--p); background: rgba(139, 92, 246, 0.1); transform: translateY(-5px); }
+        .option-card.selected { border-color: var(--p); background: rgba(139, 92, 246, 0.2); box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
 
-        /* تموجات الخلفية */
-        .blob {
-            position: absolute; width: 300px; height: 300px; background: var(--p);
-            filter: blur(120px); opacity: 0.15; z-index: -1; border-radius: 50%;
-            animation: move 20s infinite alternate;
-        }
-        @keyframes move { from { transform: translate(-10%, -10%); } to { transform: translate(100%, 100%); } }
+        /* شريط التقدم */
+        .progress-fill { transition: width 0.5s ease; height: 100%; background: linear-gradient(90deg, #7c3aed, #d946ef); }
     </style>
 </head>
 <body>
 
-    <div class="stars-container" id="stars"></div>
-    <div class="blob"></div>
-    <div class="blob" style="animation-delay: -10s; right: 0;"></div>
+    <div class="stars-bg">
+        <div class="moving-blob"></div>
+        <div class="moving-blob" style="animation-delay: -7s; right: 0;"></div>
+    </div>
 
-    <main class="main-container max-w-6xl mx-auto min-h-screen flex flex-col">
+    <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center glass border-b border-white/5">
+        <div class="text-2xl font-black italic tracking-tighter text-white">ANIMEMATCH <span class="text-violet-500 underline decoration-fuchsia-500">AI</span></div>
+        <button onclick="toggleLanguage()" class="bg-white/5 px-4 py-2 rounded-full text-xs font-bold border border-white/10 hover:bg-white/10 transition">
+            <span id="lang-btn-text">English</span>
+        </button>
+    </nav>
+
+    <main class="pt-32 pb-20 px-4 max-w-5xl mx-auto">
         
-        <nav class="py-8 flex justify-between items-center px-4">
-            <div class="text-3xl font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500">ANIMEMATCH</div>
-            <div class="text-[10px] font-bold tracking-[0.3em] text-violet-500/50 hidden md:block uppercase">Neural Recommendation Engine v3.0</div>
-        </nav>
+        <div id="hero-node" class="page-node active text-center">
+            <div class="inline-block p-3 px-6 rounded-full bg-violet-600/10 border border-violet-500/20 mb-8 animate-pulse">
+                <span class="text-violet-400 text-xs font-bold tracking-widest uppercase" data-i18n="hero-tag">System Version 4.0 Stable</span>
+            </div>
+            <h1 class="text-6xl md:text-8xl font-black mb-8 leading-tight" data-i18n="hero-title">اكتشف <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500">مصيرك الفني</span></h1>
+            <p class="text-gray-400 text-lg md:text-2xl mb-12 max-w-2xl mx-auto" data-i18n="hero-desc">المحرك الأول عالمياً الذي يحلل 15 بُعداً من شخصيتك ليعطيك النتيجة المثالية.</p>
+            <button onclick="startApp()" class="bg-violet-600 text-white px-14 py-6 rounded-3xl font-black text-2xl shadow-2xl hover:scale-105 active:scale-95 transition" data-i18n="start-btn">بدأ التحليل العميق</button>
+        </div>
 
-        <section id="home" class="section active flex-grow flex flex-col justify-center items-center text-center px-4">
-            <h1 class="text-7xl md:text-9xl font-black mb-6 leading-tight tracking-tighter">حلل <span class="text-violet-500">جيناتك</span> الفنية</h1>
-            <p class="text-gray-400 text-lg md:text-2xl mb-12 max-w-3xl leading-relaxed">أكبر نظام خبير لتحليل الشخصية وربطها بقاعدة بيانات تضم أكثر من 15,000 أنمي وفيلم.</p>
-            <button onclick="startJourney()" class="bg-violet-600 hover:bg-violet-500 text-white px-12 py-6 rounded-full font-black text-2xl transition-all shadow-[0_0_40px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95">ابدأ التحليل الكامل</button>
-        </section>
-
-        <section id="quiz" class="section flex-grow px-4 pb-20">
-            <div class="glass max-w-3xl mx-auto p-8 md:p-16 rounded-[3rem] neon-border relative overflow-hidden">
-                <div class="flex justify-between items-end mb-12">
-                    <div>
-                        <p id="cat-label" class="text-violet-400 font-bold text-xs uppercase tracking-widest mb-2">الفئة</p>
-                        <h2 id="question-text" class="text-3xl md:text-5xl font-extrabold leading-tight">السؤال؟</h2>
+        <div id="quiz-node" class="page-node">
+            <div class="glass p-8 md:p-12 rounded-[3rem] neon-shadow relative">
+                <div class="flex justify-between items-center mb-10">
+                    <span id="quiz-step" class="text-violet-500 font-black text-3xl italic">01</span>
+                    <div class="flex-grow mx-8 h-1.5 bg-white/5 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="progress-fill" style="width: 0%"></div>
                     </div>
-                    <span id="step-num" class="text-violet-500/50 font-black text-4xl italic">01</span>
+                    <span id="total-steps" class="text-gray-600 font-bold">/ 15</span>
                 </div>
+                
+                <h2 id="q-text" class="text-2xl md:text-4xl font-bold mb-10 leading-snug">السؤال يظهر هنا؟</h2>
+                
                 <div id="options-grid" class="grid gap-4 md:grid-cols-1">
                     </div>
-                <div class="absolute bottom-0 left-0 h-1 bg-violet-600 transition-all duration-500" id="progress-line"></div>
             </div>
-        </section>
+        </div>
 
-        <section id="result" class="section px-4 pb-20 text-center">
-            <div class="max-w-6xl mx-auto">
-                <div class="glass p-8 md:p-12 rounded-[4rem] mb-12">
-                    <h3 class="text-violet-400 font-bold tracking-widest mb-4">بناءً على ملفك العصبي الرقمي:</h3>
-                    <p id="analysis-text" class="text-2xl md:text-4xl font-bold mb-10 leading-relaxed"></p>
-                    
-                    <div id="results-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        </div>
-                </div>
-                <button onclick="location.reload()" class="bg-white/5 border border-white/10 px-12 py-5 rounded-2xl font-bold hover:bg-white/10 transition">إعادة المحاكاة</button>
+        <div id="result-node" class="page-node text-center">
+            <div class="glass p-10 md:p-16 rounded-[4rem] border-violet-500/20">
+                <h3 class="text-violet-400 font-bold mb-4 uppercase tracking-[0.3em]" data-i18n="res-head">التحليل النهائي</h3>
+                <p id="res-desc" class="text-2xl md:text-3xl font-bold mb-12 leading-relaxed text-gray-200"></p>
+                
+                <div id="anime-results" class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                    </div>
+
+                <button onclick="location.reload()" class="bg-violet-600/10 border border-violet-500/20 px-10 py-4 rounded-2xl font-bold text-violet-400 hover:bg-violet-600/20 transition" data-i18n="retry">إعادة المحاكاة</button>
             </div>
-        </section>
+        </div>
 
     </main>
 
     <script>
-        // قاعدة بيانات ضخمة وشاملة لكل المواضيع
-        const database = [
-            { cat: "السيكولوجيا", q: "ما الذي يحركك أكثر في القصة؟", opts: [{t:"تطور الشخصية وبناؤها", v:"seinen"}, {t:"المعارك الملحمية والقوة", v:"shonen"}, {t:"الغموض وفك الشفرات", v:"mystery"}] },
-            { cat: "الفلسفة", q: "كيف ترى العالم؟", opts: [{t:"مكان مظلم يحتاج للبقاء", v:"horror"}, {t:"عالم سحري مليء بالأمل", v:"fantasy"}, {t:"عالم تكنولوجي بارد", v:"scifi"}] },
-            { cat: "المزاج", q: "ما هي حالتك الوجدانية الآن؟", opts: [{t:"أريد ضحكاً لا ينتهي", v:"comedy"}, {t:"أريد أن أفرغ مشاعري", v:"drama"}, {t:"أريد حماساً يرفع الأدرينالين", v:"action"}] },
-            { cat: "الأسلوب", q: "أي نوع من الأبطال تفضل؟", opts: [{t:"البطل المثالي الشجاع", v:"heroic"}, {t:"البطل الغامض (Anti-Hero)", v:"dark"}, {t:"البطل العادي الواقعي", v:"slice"}] },
-            { cat: "البيئة", q: "أين تريد أن تذهب؟", opts: [{t:"اليابان القديمة (ساموراي)", v:"historical"}, {t:"الفضاء والنجوم", v:"space"}, {t:"مدرسة وحياة يومية", v:"school"}] },
-            { cat: "الوقت", q: "كم تملك من الصبر؟", opts: [{t:"أريد عملاً قصيراً ومكثفاً", v:"short"}, {t:"أريد ملحمة طويلة", v:"long"}] }
-        ];
-
-        // مكتبة ضخمة للنتائج
-        const animeLibrary = {
-            shonen: { a: "أنت تملك روح المحارب، تعشق التحدي وتؤمن بقوة الصداقة والإصرار.", s: [
-                {n: "Hunter x Hunter", d: "أعظم بناء للعوالم والقوى.", i: "https://pic.files.com/hxh.jpg"},
-                {n: "Demon Slayer", d: "لوحة فنية من القتال والمشاعر.", i: "https://pic.files.com/ds.jpg"},
-                {n: "One Piece", d: "رحلة الحرية التي لا تنتهي.", i: "https://pic.files.com/op.jpg"}
-            ]},
-            seinen: { a: "أنت تبحث عن العمق الفلسفي، تهتم بالواقعية السوداوية والدروس القاسية.", s: [
-                {n: "Berserk", d: "ملحمة الألم والصمود.", i: ""},
-                {n: "Vinland Saga", d: "البحث عن المعنى في عالم الدماء.", i: ""},
-                {n: "Monster", d: "صراع العقول والشر البشري.", i: ""}
-            ]},
-            mystery: { a: "عقلك لا يهدأ، أنت محقق ذكي تنجذب للأعمال التي تتحدى ذكاءك.", s: [
-                {n: "Death Note", d: "صراع الآلهة والبشر.", i: ""},
-                {n: "Steins;Gate", d: "أعظم قصة عن السفر عبر الزمن.", i: ""},
-                {n: "The Promised Neverland", d: "هروب من اليأس بالذكاء.", i: ""}
-            ]},
-            drama: { a: "أنت مرهف الإحساس، تنجذب للقصص التي تلمس الروح وتعالج الندوب.", s: [
-                {n: "Violet Evergarden", d: "تعلم معنى كلمة 'أحبك'.", i: ""},
-                {n: "A Silent Voice", d: "عن الندم والغفران.", i: ""},
-                {n: "Your Lie in April", d: "معزوفة الحب والحزن.", i: ""}
-            ]}
-            // ... يمكن إضافة المزيد من الفئات بسهولة
+        // نظام اللغات
+        const i18n = {
+            ar: {
+                "hero-title": "اكتشف مصيرك الفني", "hero-desc": "المحرك الأول عالمياً الذي يحلل 15 بُعداً من شخصيتك ليعطيك النتيجة المثالية.",
+                "start-btn": "بدأ التحليل العميق", "res-head": "التحليل النهائي", "retry": "إعادة المحاكاة",
+                "questions": [
+                    {q: "كيف تفضل أن تبدأ القصة؟", o: [{t:"غموض وهدوء مريب", v:"mystery"}, {t:"أكشن وانفجارات فورية", v:"action"}, {t:"مشهد درامي مؤثر", v:"drama"}]},
+                    {q: "أي نوع من الأبطال يلهمك؟", o: [{t:"البطل المثالي الذي لا يستسلم", v:"shonen"}, {t:"البطل الذي يرتكب أخطاء بشرية", v:"seinen"}, {t:"البطل العبقري الشرير", v:"antihero"}]},
+                    {q: "ما هو مفهومك للعدالة؟", o: [{t:"القانون مقدس", v:"police"}, {t:"القوة هي العدل", v:"dark"}, {t:"العدالة وهم", v:"psych"}]},
+                    {q: "في العالم المثالي، أين تعيش؟", o: [{t:"مدينة مستقبلية مدمرة", v:"cyberpunk"}, {t:"غابة سحرية", v:"fantasy"}, {t:"اليابان القديمة", v:"historical"}]},
+                    {q: "ماذا تفعل لو خانك أعز أصدقائك؟", o: [{t:"أنتقم بقسوة", v:"revenge"}, {t:"أحزن وأسامح", v:"drama"}, {t:"أحلل السبب ببرود", v:"mystery"}]},
+                    {q: "أي قوة تختار؟", o: [{t:"التحكم بالزمن", v:"scifi"}, {t:"القوة البدنية المطلقة", v:"action"}, {t:"قراءة الأفكار", v:"psych"}]},
+                    {q: "ما هو الجو المفضل للمشاهدة؟", o: [{t:"ليل وظلام", v:"horror"}, {t:"غروب هادئ", v:"slice"}, {t:"فجر مليء بالأمل", v:"adventure"}]},
+                    {q: "أي مادة تفضل في الدراسة؟", o: [{t:"الفيزياء والعلوم", v:"scifi"}, {t:"التاريخ", v:"historical"}, {t:"علم النفس", v:"psych"}]},
+                    {q: "كيف تتعامل مع الفشل؟", o: [{t:"أحاول بجنون", v:"shonen"}, {t:"أتقبل الواقع", v:"seinen"}, {t:"أبحث عن طريق مختصر", v:"smart"}]},
+                    {q: "ماذا يمثل لك الفن؟", o: [{t:"هروب من الواقع", v:"fantasy"}, {t:"مرآة للواقع", v:"drama"}, {t:"تحدي للواقع", v:"action"}]},
+                    {q: "أي نوع من النهايات تفضل؟", o: [{t:"نهاية سعيدة واضحة", v:"shonen"}, {t:"نهاية مفتوحة للتفكير", v:"psych"}, {t:"نهاية مأساوية حزينة", v:"drama"}]},
+                    {q: "ما هو شعورك تجاه التكنولوجيا؟", o: [{t:"هي المستقبل", v:"cyberpunk"}, {t:"هي خطر علينا", v:"horror"}, {t:"مجرد أداة", v:"slice"}]},
+                    {q: "أي حيوان يمثلك؟", o: [{t:"الأسد الشجاع", v:"action"}, {t:"البومة الحكيمة", v:"mystery"}, {t:"الذئب المنفرد", v:"dark"}]},
+                    {q: "ماذا تختار لمشاهدته الآن؟", o: [{t:"ساعة واحدة مكثفة", v:"movie"}, {t:"عدة ساعات متواصلة", v:"series"}]},
+                    {q: "السؤال الأخير: هل تثق في هذا الذكاء الاصطناعي؟", o: [{t:"نعم، أرني النتيجة", v:"final"}, {t:"أنا هنا للتجربة فقط", v:"final"}]}
+                ]
+            },
+            en: {
+                "hero-title": "Discover Your Artistic Destiny", "hero-desc": "The world's first engine that analyzes 15 dimensions of your personality.",
+                "start-btn": "Start Deep Analysis", "res-head": "Final Neural Analysis", "retry": "Restart Simulation",
+                "questions": [
+                    {q: "How should the story begin?", o: [{t:"Mysterious and quiet", v:"mystery"}, {t:"Immediate action", v:"action"}, {t:"Emotional drama", v:"drama"}]},
+                    {q: "What kind of hero inspires you?", o: [{t:"Never-give-up hero", v:"shonen"}, {t:"Humanly flawed hero", v:"seinen"}, {t:"The genius anti-hero", v:"antihero"}]},
+                    {q: "What is justice to you?", o: [{t:"Law is sacred", v:"police"}, {t:"Might is right", v:"dark"}, {t:"Justice is an illusion", v:"psych"}]},
+                    {q: "In an ideal world, where do you live?", o: [{t:"Dystopian cyber city", v:"cyberpunk"}, {t:"Magical forest", v:"fantasy"}, {t:"Ancient Japan", v:"historical"}]},
+                    {q: "If a friend betrays you?", o: [{t:"Revenge", v:"revenge"}, {t:"Forgive", v:"drama"}, {t:"Analyze cold-bloodedly", v:"mystery"}]},
+                    {q: "Which power would you choose?", o: [{t:"Time control", v:"scifi"}, {t:"Absolute physical strength", v:"action"}, {t:"Mind reading", v:"psych"}]},
+                    {q: "Favorite viewing vibe?", o: [{t:"Midnight darkness", v:"horror"}, {t:"Quiet sunset", v:"slice"}, {t:"Hopeful dawn", v:"adventure"}]},
+                    {q: "Favorite subject in school?", o: [{t:"Physics", v:"scifi"}, {t:"History", v:"historical"}, {t:"Psychology", v:"psych"}]},
+                    {q: "How do you handle failure?", o: [{t:"Try harder", v:"shonen"}, {t:"Accept reality", v:"seinen"}, {t:"Find a shortcut", v:"smart"}]},
+                    {q: "What is art to you?", o: [{t:"Escape", v:"fantasy"}, {t:"Mirror of reality", v:"drama"}, {t:"Challenge to reality", v:"action"}]},
+                    {q: "Favorite ending type?", o: [{t:"Clear happy ending", v:"shonen"}, {t:"Open ending", v:"psych"}, {t:"Tragic ending", v:"drama"}]},
+                    {q: "Your feeling about technology?", o: [{t:"Future", v:"cyberpunk"}, {t:"Danger", v:"horror"}, {t:"Tool", v:"slice"}]},
+                    {q: "Which animal represents you?", o: [{t:"Brave Lion", v:"action"}, {t:"Wise Owl", v:"mystery"}, {t:"Lone Wolf", v:"dark"}]},
+                    {q: "What's your watch time today?", o: [{t:"1 hour movie", v:"movie"}, {t:"Binge series", v:"series"}]},
+                    {q: "Last question: Do you trust this AI?", o: [{t:"Yes, show result", v:"final"}, {t:"Just testing", v:"final"}]}
+                ]
+            }
         };
 
-        let step = 0;
-        let userPoints = {};
+        const resultsMapping = {
+            mystery: { d: "أنت شخصية تحليلية، تعشق كشف الأسرار.", s: ["Monster", "Death Note", "Psycho-Pass"] },
+            shonen: { d: "تملك روحاً شابة، تحب القتال من أجل المبادئ.", s: ["Hunter x Hunter", "Naruto", "One Piece"] },
+            psych: { d: "أنت غائص في أعماق النفس البشرية، تعشق التعقيد.", s: ["Evangelion", "Serial Experiments Lain", "Perfect Blue"] },
+            fantasy: { d: "أنت حالم، تهرب من الواقع إلى عوالم السحر.", s: ["Frieren", "Mushoku Tensei", "Spirited Away"] },
+            action: { d: "أنت شخصية حركية، تعشق الأدرينالين والإثارة.", s: ["Jujutsu Kaisen", "Vinland Saga", "Attack on Titan"] },
+            drama: { d: "أنت حساس جداً، وتقدر القصص الإنسانية.", s: ["Your Lie in April", "Violet Evergarden", "Clannad"] },
+            cyberpunk: { d: "تعشق الخيال العلمي والمستقبل السوداوي.", s: ["Ghost in the Shell", "Cyberpunk Edgerunners", "Akira"] }
+        };
 
-        function startJourney() {
-            document.getElementById('home').classList.remove('active');
+        let lang = 'ar';
+        let step = 0;
+        let points = {};
+
+        function toggleLanguage() {
+            lang = lang === 'ar' ? 'en' : 'ar';
+            document.getElementById('main-html').dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('main-html').lang = lang;
+            document.getElementById('lang-btn-text').innerText = lang === 'ar' ? 'English' : 'العربية';
+            updateStaticText();
+            if(step > 0 && step < 15) renderQuestion();
+        }
+
+        function updateStaticText() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                el.innerText = i18n[lang][key];
+            });
+        }
+
+        function startApp() {
+            document.getElementById('hero-node').classList.remove('active');
             setTimeout(() => {
-                document.getElementById('home').style.display = 'none';
-                document.getElementById('quiz').classList.add('active');
+                document.getElementById('hero-node').style.display = 'none';
+                document.getElementById('quiz-node').classList.add('active');
                 renderQuestion();
             }, 600);
         }
 
         function renderQuestion() {
-            const q = database[step];
-            document.getElementById('cat-label').innerText = q.cat;
-            document.getElementById('question-text').innerText = q.q;
-            document.getElementById('step-num').innerText = (step + 1).toString().padStart(2, '0');
-            document.getElementById('progress-line').style.width = ((step + 1) / database.length * 100) + '%';
-
+            const data = i18n[lang].questions[step];
+            document.getElementById('quiz-step').innerText = (step + 1).toString().padStart(2, '0');
+            document.getElementById('q-text').innerText = data.q;
+            document.getElementById('progress-bar').style.width = ((step + 1) / 15 * 100) + '%';
+            
             const grid = document.getElementById('options-grid');
             grid.innerHTML = '';
-            q.opts.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "btn-option p-6 md:p-8 rounded-3xl text-right font-bold text-xl md:text-2xl";
-                btn.innerText = opt.t;
-                btn.onclick = () => handleChoice(opt.v);
-                grid.appendChild(btn);
+            data.o.forEach(opt => {
+                const card = document.createElement('div');
+                card.className = 'option-card p-6 rounded-2xl font-bold text-lg md:text-xl';
+                card.innerText = opt.t;
+                card.onclick = () => selectOption(opt.v);
+                grid.appendChild(card);
             });
         }
 
-        function handleChoice(val) {
-            userPoints[val] = (userPoints[val] || 0) + 1;
-            if (step < database.length - 1) {
+        function selectOption(val) {
+            points[val] = (points[val] || 0) + 1;
+            if(step < 14) {
                 step++;
-                const quizBox = document.querySelector('#quiz .glass');
-                quizBox.style.opacity = '0';
-                quizBox.style.transform = 'translateY(20px)';
-                setTimeout(() => {
-                    renderQuestion();
-                    quizBox.style.opacity = '1';
-                    quizBox.style.transform = 'translateY(0)';
-                }, 400);
+                renderQuestion();
             } else {
-                showFinalResults();
+                showResults();
             }
         }
 
-        function showFinalResults() {
-            document.getElementById('quiz').classList.remove('active');
+        function showResults() {
+            document.getElementById('quiz-node').classList.remove('active');
             setTimeout(() => {
-                document.getElementById('quiz').style.display = 'none';
-                document.getElementById('result').classList.add('active');
+                document.getElementById('quiz-node').style.display = 'none';
+                document.getElementById('result-node').classList.add('active');
                 
                 // حساب الفئة الفائزة
-                const winner = Object.keys(userPoints).reduce((a, b) => userPoints[a] > userPoints[b] ? a : b);
-                const res = animeLibrary[winner] || animeLibrary["shonen"];
+                const winner = Object.keys(points).sort((a,b) => points[b] - points[a])[0];
+                const res = resultsMapping[winner] || resultsMapping["action"];
                 
-                document.getElementById('analysis-text').innerText = res.a;
-                const grid = document.getElementById('results-grid');
+                document.getElementById('res-desc').innerText = res.d;
+                const grid = document.getElementById('anime-results');
                 grid.innerHTML = '';
-                
-                res.s.forEach((item, i) => {
+                res.s.forEach(name => {
                     grid.innerHTML += `
-                        <div class="glass p-6 rounded-[3rem] hover:border-violet-500 transition-all duration-500 group">
-                            <div class="h-48 bg-gradient-to-br from-violet-900/40 to-black rounded-[2rem] mb-6 flex items-center justify-center text-5xl group-hover:scale-110 transition">🎬</div>
-                            <h4 class="text-2xl font-black mb-3 text-violet-400">${item.n}</h4>
-                            <p class="text-gray-500 text-sm leading-relaxed">${item.d}</p>
+                        <div class="glass p-6 rounded-3xl hover:border-violet-500 transition duration-500">
+                            <div class="h-40 bg-gradient-to-br from-violet-600/20 to-fuchsia-600/20 rounded-2xl mb-4 flex items-center justify-center text-5xl">🎬</div>
+                            <h4 class="text-xl font-black">${name}</h4>
                         </div>
                     `;
                 });
             }, 600);
-        }
-
-        // توليد النجوم
-        const starsContainer = document.getElementById('stars');
-        for (let i = 0; i < 150; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            const size = Math.random() * 2 + 1;
-            star.style.width = size + 'px';
-            star.style.height = size + 'px';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 100 + '%';
-            star.style.setProperty('--d', (Math.random() * 3 + 2) + 's');
-            starsContainer.appendChild(star);
         }
     </script>
 </body>
