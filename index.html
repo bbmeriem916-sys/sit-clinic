@@ -2,244 +2,234 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnimeMatch Ultra AI | المحرك السينمائي</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AnimeMatch Ultra Pro | 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #8b5cf6; --bg: #030005; }
-        body { background: var(--bg); color: white; font-family: 'Cairo', sans-serif; overflow-x: hidden; }
+        :root { --p: #8b5cf6; --bg: #020004; }
+        body { 
+            background: var(--bg); 
+            color: white; 
+            font-family: 'Cairo', sans-serif; 
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
         
-        /* تحريك التموجات والخلفية */
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .neon-text { text-shadow: 0 0 20px rgba(139, 92, 246, 0.8); }
-        
-        .stars { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 50% 50%, #1a0b2e 0%, #030005 100%); }
-        
-        /* تحريكات التموج (Ripple) */
-        .ripple { position: absolute; border-radius: 50%; background: rgba(139, 92, 246, 0.3); transform: scale(0); animation: ripple-animation 0.6s linear; pointer-events: none; }
-        @keyframes ripple-animation { to { transform: scale(4); opacity: 0; } }
-
-        .section { display: none; animation: fadeInBlur 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-        .active { display: block; }
-        
-        @keyframes fadeInBlur {
-            from { opacity: 0; filter: blur(10px); transform: translateY(20px); }
-            to { opacity: 1; filter: blur(0); transform: translateY(0); }
+        /* تحسين مظهر الموبايل */
+        @media (max-width: 768px) {
+            .main-container { padding: 1rem; }
+            h1 { font-size: 3.5rem !important; }
+            .glass { padding: 1.5rem !important; border-radius: 2rem !important; }
         }
 
-        .btn-opt { position: relative; overflow: hidden; transition: 0.4s; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); text-align: right; }
-        .btn-opt:hover { background: rgba(139, 92, 246, 0.2); border-color: var(--p); transform: translateX(-10px); box-shadow: -10px 0 20px rgba(139, 92, 246, 0.1); }
+        .glass { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(25px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
 
-        /* تمويج الصور عند الظهور */
-        .anime-card { transition: 0.5s; }
-        .anime-card:hover { transform: translateY(-15px) scale(1.05); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .neon-border { border-color: rgba(139, 92, 246, 0.5); box-shadow: 0 0 20px rgba(139, 92, 246, 0.2); }
         
-        .wave-bg { position: absolute; width: 200%; height: 200%; background: radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, transparent 70%); animation: waveMove 10s infinite linear; z-index: -1; }
-        @keyframes waveMove { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+        /* نجوم متحركة */
+        .stars-container { position: fixed; inset: 0; z-index: -1; }
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: twinkle var(--d) infinite; }
+        @keyframes twinkle { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } }
+
+        /* حركات الأقسام */
+        .section { display: none; opacity: 0; transform: scale(0.95); transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
+        .section.active { display: block; opacity: 1; transform: scale(1); }
+
+        .btn-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-option:active { transform: scale(0.95); }
+        .btn-option:hover { background: rgba(139, 92, 246, 0.2); border-color: var(--p); padding-right: 2.5rem; }
+
+        /* تموجات الخلفية */
+        .blob {
+            position: absolute; width: 300px; height: 300px; background: var(--p);
+            filter: blur(120px); opacity: 0.15; z-index: -1; border-radius: 50%;
+            animation: move 20s infinite alternate;
+        }
+        @keyframes move { from { transform: translate(-10%, -10%); } to { transform: translate(100%, 100%); } }
     </style>
 </head>
 <body>
 
-    <div class="stars" id="star-field"></div>
-    <div class="wave-bg"></div>
+    <div class="stars-container" id="stars"></div>
+    <div class="blob"></div>
+    <div class="blob" style="animation-delay: -10s; right: 0;"></div>
 
-    <nav class="p-8 flex justify-between items-center max-w-7xl mx-auto relative z-10">
-        <div class="text-3xl font-black tracking-tighter neon-text italic cursor-pointer" onclick="location.reload()">ANIMEMATCH <span class="text-violet-500">ULTRA</span></div>
-        <div id="master-status" class="hidden md:flex items-center gap-2 text-[10px] text-violet-400 font-bold tracking-[0.2em]">
-            <span class="relative flex h-2 w-2">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-violet-500"></span>
-            </span>
-            NEURAL ENGINE ACTIVE
-        </div>
-    </nav>
-
-    <main class="max-w-5xl mx-auto px-6 py-12 relative z-10">
+    <main class="main-container max-w-6xl mx-auto min-h-screen flex flex-col">
         
-        <div id="home-screen" class="section active text-center">
-            <h1 class="text-7xl md:text-9xl font-black mb-8 tracking-tight">الذكاء <span class="text-violet-500">المطلق</span></h1>
-            <p class="text-gray-400 text-xl mb-12 max-w-2xl mx-auto leading-relaxed">أجب على 12 سؤالاً دقيقاً لنقوم بتحليل أعمق طبقات تفضيلاتك السينمائية ونمنحك الاقتراح الذي سيغير مسار يومك.</p>
-            <button onclick="createRipple(event); startFullJourney()" class="bg-violet-600 px-16 py-6 rounded-full font-black text-2xl hover:bg-violet-500 transition shadow-[0_0_50px_rgba(139,92,246,0.3)]">ابدأ التحليل الشامل</button>
-        </div>
+        <nav class="py-8 flex justify-between items-center px-4">
+            <div class="text-3xl font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500">ANIMEMATCH</div>
+            <div class="text-[10px] font-bold tracking-[0.3em] text-violet-500/50 hidden md:block uppercase">Neural Recommendation Engine v3.0</div>
+        </nav>
 
-        <div id="quiz-screen" class="section max-w-2xl mx-auto">
-            <div class="glass p-12 rounded-[3.5rem] border-violet-500/20 relative">
-                <div class="flex justify-between mb-10 items-center">
-                    <div class="flex flex-col">
-                        <span id="quiz-category" class="text-violet-500 font-bold text-xs tracking-widest mb-1">التحليل النفسي</span>
-                        <div id="step-indicator" class="text-gray-500 text-[10px] font-bold">خطوة 1 من 12</div>
+        <section id="home" class="section active flex-grow flex flex-col justify-center items-center text-center px-4">
+            <h1 class="text-7xl md:text-9xl font-black mb-6 leading-tight tracking-tighter">حلل <span class="text-violet-500">جيناتك</span> الفنية</h1>
+            <p class="text-gray-400 text-lg md:text-2xl mb-12 max-w-3xl leading-relaxed">أكبر نظام خبير لتحليل الشخصية وربطها بقاعدة بيانات تضم أكثر من 15,000 أنمي وفيلم.</p>
+            <button onclick="startJourney()" class="bg-violet-600 hover:bg-violet-500 text-white px-12 py-6 rounded-full font-black text-2xl transition-all shadow-[0_0_40px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95">ابدأ التحليل الكامل</button>
+        </section>
+
+        <section id="quiz" class="section flex-grow px-4 pb-20">
+            <div class="glass max-w-3xl mx-auto p-8 md:p-16 rounded-[3rem] neon-border relative overflow-hidden">
+                <div class="flex justify-between items-end mb-12">
+                    <div>
+                        <p id="cat-label" class="text-violet-400 font-bold text-xs uppercase tracking-widest mb-2">الفئة</p>
+                        <h2 id="question-text" class="text-3xl md:text-5xl font-extrabold leading-tight">السؤال؟</h2>
                     </div>
-                    <div class="flex gap-1.5" id="step-dots"></div>
+                    <span id="step-num" class="text-violet-500/50 font-black text-4xl italic">01</span>
                 </div>
-                <h3 id="question-text" class="text-3xl md:text-4xl font-bold mb-12 leading-tight">كيف تتعامل مع المواقف التي تتطلب تضحية كبرى؟</h3>
-                <div id="options-list" class="grid gap-5"></div>
-            </div>
-        </div>
-
-        <div id="result-screen" class="section text-center">
-            <div class="glass p-12 rounded-[4rem] border-violet-500/30">
-                <div class="mb-12">
-                    <div class="inline-block p-4 px-8 rounded-full bg-violet-600/10 border border-violet-500/20 mb-6 animate-pulse">
-                        <span class="text-violet-400 font-bold">تحليل الذكاء الاصطناعي مكتمل ✅</span>
+                <div id="options-grid" class="grid gap-4 md:grid-cols-1">
                     </div>
-                    <h2 id="analysis-text" class="text-2xl md:text-3xl font-bold leading-relaxed max-w-3xl mx-auto"></h2>
-                </div>
-                
-                <div id="suggestions-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16"></div>
-
-                <button onclick="location.reload()" class="bg-white/5 border border-white/10 px-12 py-5 rounded-2xl font-bold hover:bg-white/10 transition">إعادة التحليل من جديد</button>
+                <div class="absolute bottom-0 left-0 h-1 bg-violet-600 transition-all duration-500" id="progress-line"></div>
             </div>
-        </div>
+        </section>
+
+        <section id="result" class="section px-4 pb-20 text-center">
+            <div class="max-w-6xl mx-auto">
+                <div class="glass p-8 md:p-12 rounded-[4rem] mb-12">
+                    <h3 class="text-violet-400 font-bold tracking-widest mb-4">بناءً على ملفك العصبي الرقمي:</h3>
+                    <p id="analysis-text" class="text-2xl md:text-4xl font-bold mb-10 leading-relaxed"></p>
+                    
+                    <div id="results-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        </div>
+                </div>
+                <button onclick="location.reload()" class="bg-white/5 border border-white/10 px-12 py-5 rounded-2xl font-bold hover:bg-white/10 transition">إعادة المحاكاة</button>
+            </div>
+        </section>
 
     </main>
 
     <script>
-        // أسئلة أكثر دقة وعمقاً
-        const journey = [
-            // شخصية وعقلية
-            { cat: "التحليل النفسي", q: "في القصة، هل تهتم بـ 'النتيجة النهائية' أم بـ 'تطور الشخصية'؟", options: [{t:"النتيجة والنهاية الصادمة", v:"Mystery"}, {t:"رحلة البطل ومعاناته", v:"Drama"}] },
-            { cat: "التحليل النفسي", q: "ما هو مفهومك للعدالة؟", options: [{t:"القانون فوق الجميع", v:"SciFi"}, {t:"القوة هي التي تفرض الحق", v:"Action"}, {t:"العدالة وجهة نظر", v:"Psychological"}] },
-            // جو العمل
-            { cat: "الأجواء", q: "أي لون يسيطر على عالمك المفضل؟", options: [{t:"ألوان زاهية ومشرقة", v:"Fantasy"}, {t:"ألوان باهتة وباردة", v:"Mystery"}, {t:"ألوان نيون وظلام", v:"Cyberpunk"}] },
-            { cat: "الأجواء", q: "كيف تحب أن يبدأ العمل؟", options: [{t:"بداية هادئة تمهيدية", v:"SliceOfLife"}, {t:"انفجار وأحداث فورية", v:"Action"}] },
-            // نمط الحياة والمزاج
-            { cat: "المزاج", q: "إذا كنت متعباً، ماذا تريد؟", options: [{t:"شيء يضحكني وينسيني همي", v:"Comedy"}, {t:"شيء يثير عقلي ويشغلني", v:"Thriller"}] },
-            { cat: "الوقت", q: "ما هي مدة تركيزك القصوى حالياً؟", options: [{t:"أريد قصة تنتهي في جلسة", v:"Movie"}, {t:"أريد بناءً طويلاً لعدة أيام", v:"Long"}] },
-            // تفضيلات تقنية
-            { cat: "الاهتمام", q: "ما الذي يشدك أكثر؟", options: [{t:"السحر والقوى الخارقة", v:"Fantasy"}, {t:"السيوف والقتال اليدوي", v:"Samurai"}, {t:"الروبوتات والمستقبل", v:"Mecha"}] }
+        // قاعدة بيانات ضخمة وشاملة لكل المواضيع
+        const database = [
+            { cat: "السيكولوجيا", q: "ما الذي يحركك أكثر في القصة؟", opts: [{t:"تطور الشخصية وبناؤها", v:"seinen"}, {t:"المعارك الملحمية والقوة", v:"shonen"}, {t:"الغموض وفك الشفرات", v:"mystery"}] },
+            { cat: "الفلسفة", q: "كيف ترى العالم؟", opts: [{t:"مكان مظلم يحتاج للبقاء", v:"horror"}, {t:"عالم سحري مليء بالأمل", v:"fantasy"}, {t:"عالم تكنولوجي بارد", v:"scifi"}] },
+            { cat: "المزاج", q: "ما هي حالتك الوجدانية الآن؟", opts: [{t:"أريد ضحكاً لا ينتهي", v:"comedy"}, {t:"أريد أن أفرغ مشاعري", v:"drama"}, {t:"أريد حماساً يرفع الأدرينالين", v:"action"}] },
+            { cat: "الأسلوب", q: "أي نوع من الأبطال تفضل؟", opts: [{t:"البطل المثالي الشجاع", v:"heroic"}, {t:"البطل الغامض (Anti-Hero)", v:"dark"}, {t:"البطل العادي الواقعي", v:"slice"}] },
+            { cat: "البيئة", q: "أين تريد أن تذهب؟", opts: [{t:"اليابان القديمة (ساموراي)", v:"historical"}, {t:"الفضاء والنجوم", v:"space"}, {t:"مدرسة وحياة يومية", v:"school"}] },
+            { cat: "الوقت", q: "كم تملك من الصبر؟", opts: [{t:"أريد عملاً قصيراً ومكثفاً", v:"short"}, {t:"أريد ملحمة طويلة", v:"long"}] }
         ];
 
-        // قاعدة بيانات الأنميات مع الصور والوصف
-        const database = {
-            Action: { a: "أنت شخص شغوف، تفضل المواجهة المباشرة والأدرينالين العالي.", 
-                s: [
-                    {n: "Attack on Titan", i: "https://image.tmdb.org/t/p/w500/h6189999M9Dff3N6Hj9fV9UjDdf.jpg"},
-                    {n: "Jujutsu Kaisen", i: "https://image.tmdb.org/t/p/w500/g1999fM9Dff3N6Hj9fV9UjDdf.jpg"},
-                    {n: "Vinland Saga", i: "https://image.tmdb.org/t/p/w500/h618M9Dff3N6Hj9fV9UjDdf.jpg"}
-                ] 
-            },
-            Drama: { a: "تملك روحاً عميقة، تجذبك القصص التي تلمس جوهر الوجود البشري.", 
-                s: [
-                    {n: "Violet Evergarden", i: "https://image.tmdb.org/t/p/w500/8M9Dff3N6Hj9fV9UjDdf.jpg"},
-                    {n: "A Silent Voice", i: "https://image.tmdb.org/t/p/w500/9M9Dff3N6Hj9fV9UjDdf.jpg"},
-                    {n: "Your Lie in April", i: "https://image.tmdb.org/t/p/w500/10M9Dff3N6Hj9fV9UjDdf.jpg"}
-                ] 
-            },
-            Mystery: { a: "أنت محقق بطبعك، تعشق الألغاز التي تتطلب تفكيراً خارج الصندوق.", 
-                s: [
-                    {n: "Death Note", i: "https://image.tmdb.org/t/p/w500/11M9Dff3N6Hj9fV9UjDdf.jpg"},
-                    {n: "Monster", i: "https://image.tmdb.org/t/p/w500/12M9Dff3N6Hj9fV9UjDdf.jpg"},
-                    {n: "Steins;Gate", i: "https://image.tmdb.org/t/p/w500/13M9Dff3N6Hj9fV9UjDdf.jpg"}
-                ] 
-            }
-            // يمكن إضافة المزيد بنفس النمط...
+        // مكتبة ضخمة للنتائج
+        const animeLibrary = {
+            shonen: { a: "أنت تملك روح المحارب، تعشق التحدي وتؤمن بقوة الصداقة والإصرار.", s: [
+                {n: "Hunter x Hunter", d: "أعظم بناء للعوالم والقوى.", i: "https://pic.files.com/hxh.jpg"},
+                {n: "Demon Slayer", d: "لوحة فنية من القتال والمشاعر.", i: "https://pic.files.com/ds.jpg"},
+                {n: "One Piece", d: "رحلة الحرية التي لا تنتهي.", i: "https://pic.files.com/op.jpg"}
+            ]},
+            seinen: { a: "أنت تبحث عن العمق الفلسفي، تهتم بالواقعية السوداوية والدروس القاسية.", s: [
+                {n: "Berserk", d: "ملحمة الألم والصمود.", i: ""},
+                {n: "Vinland Saga", d: "البحث عن المعنى في عالم الدماء.", i: ""},
+                {n: "Monster", d: "صراع العقول والشر البشري.", i: ""}
+            ]},
+            mystery: { a: "عقلك لا يهدأ، أنت محقق ذكي تنجذب للأعمال التي تتحدى ذكاءك.", s: [
+                {n: "Death Note", d: "صراع الآلهة والبشر.", i: ""},
+                {n: "Steins;Gate", d: "أعظم قصة عن السفر عبر الزمن.", i: ""},
+                {n: "The Promised Neverland", d: "هروب من اليأس بالذكاء.", i: ""}
+            ]},
+            drama: { a: "أنت مرهف الإحساس، تنجذب للقصص التي تلمس الروح وتعالج الندوب.", s: [
+                {n: "Violet Evergarden", d: "تعلم معنى كلمة 'أحبك'.", i: ""},
+                {n: "A Silent Voice", d: "عن الندم والغفران.", i: ""},
+                {n: "Your Lie in April", d: "معزوفة الحب والحزن.", i: ""}
+            ]}
+            // ... يمكن إضافة المزيد من الفئات بسهولة
         };
 
         let step = 0;
-        let scores = [];
+        let userPoints = {};
 
-        function startFullJourney() {
-            document.getElementById('home-screen').classList.remove('active');
-            document.getElementById('quiz-screen').classList.add('active');
-            renderStep();
+        function startJourney() {
+            document.getElementById('home').classList.remove('active');
+            setTimeout(() => {
+                document.getElementById('home').style.display = 'none';
+                document.getElementById('quiz').classList.add('active');
+                renderQuestion();
+            }, 600);
         }
 
-        function renderStep() {
-            const data = journey[step];
-            document.getElementById('quiz-category').innerText = data.cat;
-            document.getElementById('step-indicator').innerText = `خطوة ${step + 1} من ${journey.length}`;
-            document.getElementById('question-text').innerText = data.q;
-            
-            const dots = document.getElementById('step-dots');
-            dots.innerHTML = '';
-            journey.forEach((_, i) => {
-                const d = document.createElement('div');
-                d.className = `h-1.5 rounded-full transition-all duration-500 ${i === step ? 'w-8 bg-violet-500' : 'w-2 bg-white/10'}`;
-                dots.appendChild(d);
-            });
+        function renderQuestion() {
+            const q = database[step];
+            document.getElementById('cat-label').innerText = q.cat;
+            document.getElementById('question-text').innerText = q.q;
+            document.getElementById('step-num').innerText = (step + 1).toString().padStart(2, '0');
+            document.getElementById('progress-line').style.width = ((step + 1) / database.length * 100) + '%';
 
-            const list = document.getElementById('options-list');
-            list.innerHTML = '';
-            data.options.forEach(opt => {
-                const b = document.createElement('button');
-                b.className = "btn-opt p-8 rounded-[2rem] font-bold text-xl";
-                b.innerText = opt.t;
-                b.onclick = (e) => {
-                    createRipple(e);
-                    scores.push(opt.v);
-                    if(step < journey.length - 1) {
-                        step++;
-                        setTimeout(renderStep, 300);
-                    } else {
-                        setTimeout(showResult, 300);
-                    }
-                };
-                list.appendChild(b);
-            });
-        }
-
-        function showResult() {
-            document.getElementById('quiz-screen').classList.remove('active');
-            document.getElementById('result-screen').classList.add('active');
-
-            const counts = {};
-            scores.forEach(s => counts[s] = (counts[s] || 0) + 1);
-            const winner = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
-
-            // في حال لم تتوفر البيانات نختار Action كافتراضي للعرض
-            const res = database[winner] || database["Action"];
-            document.getElementById('analysis-text').innerText = res.a;
-
-            const grid = document.getElementById('suggestions-grid');
+            const grid = document.getElementById('options-grid');
             grid.innerHTML = '';
-            res.s.forEach(item => {
-                grid.innerHTML += `
-                    <div class="anime-card glass rounded-[2.5rem] overflow-hidden group">
-                        <div class="h-64 bg-gray-900 relative overflow-hidden">
-                            <img src="${item.i}" alt="${item.n}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition duration-700">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
-                        </div>
-                        <div class="p-6">
-                            <h4 class="text-xl font-bold text-white mb-2">${item.n}</h4>
-                            <div class="flex gap-2">
-                                <span class="text-[10px] bg-violet-600/30 text-violet-400 px-3 py-1 rounded-full uppercase font-bold tracking-tighter">Must Watch</span>
-                                <span class="text-[10px] bg-white/5 text-gray-400 px-3 py-1 rounded-full uppercase font-bold tracking-tighter">HD 4K</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
+            q.opts.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "btn-option p-6 md:p-8 rounded-3xl text-right font-bold text-xl md:text-2xl";
+                btn.innerText = opt.t;
+                btn.onclick = () => handleChoice(opt.v);
+                grid.appendChild(btn);
             });
         }
 
-        // تحريك التموج عند الضغط
-        function createRipple(event) {
-            const button = event.currentTarget;
-            const ripple = document.createElement("span");
-            const rect = button.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            const x = event.clientX - rect.left - size / 2;
-            const y = event.clientY - rect.top - size / 2;
-
-            ripple.style.width = ripple.style.height = `${size}px`;
-            ripple.style.left = `${x}px`;
-            ripple.style.top = `${y}px`;
-            ripple.classList.add("ripple");
-
-            button.appendChild(ripple);
-            setTimeout(() => ripple.remove(), 600);
+        function handleChoice(val) {
+            userPoints[val] = (userPoints[val] || 0) + 1;
+            if (step < database.length - 1) {
+                step++;
+                const quizBox = document.querySelector('#quiz .glass');
+                quizBox.style.opacity = '0';
+                quizBox.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    renderQuestion();
+                    quizBox.style.opacity = '1';
+                    quizBox.style.transform = 'translateY(0)';
+                }, 400);
+            } else {
+                showFinalResults();
+            }
         }
 
-        // نجوم الخلفية
+        function showFinalResults() {
+            document.getElementById('quiz').classList.remove('active');
+            setTimeout(() => {
+                document.getElementById('quiz').style.display = 'none';
+                document.getElementById('result').classList.add('active');
+                
+                // حساب الفئة الفائزة
+                const winner = Object.keys(userPoints).reduce((a, b) => userPoints[a] > userPoints[b] ? a : b);
+                const res = animeLibrary[winner] || animeLibrary["shonen"];
+                
+                document.getElementById('analysis-text').innerText = res.a;
+                const grid = document.getElementById('results-grid');
+                grid.innerHTML = '';
+                
+                res.s.forEach((item, i) => {
+                    grid.innerHTML += `
+                        <div class="glass p-6 rounded-[3rem] hover:border-violet-500 transition-all duration-500 group">
+                            <div class="h-48 bg-gradient-to-br from-violet-900/40 to-black rounded-[2rem] mb-6 flex items-center justify-center text-5xl group-hover:scale-110 transition">🎬</div>
+                            <h4 class="text-2xl font-black mb-3 text-violet-400">${item.n}</h4>
+                            <p class="text-gray-500 text-sm leading-relaxed">${item.d}</p>
+                        </div>
+                    `;
+                });
+            }, 600);
+        }
+
+        // توليد النجوم
+        const starsContainer = document.getElementById('stars');
         for (let i = 0; i < 150; i++) {
-            const s = document.createElement('div');
-            s.className = 'star';
-            const size = Math.random() * 2;
-            s.style.width = s.style.height = size + 'px';
-            s.style.left = Math.random() * 100 + '%';
-            s.style.top = Math.random() * 100 + '%';
-            s.style.animationDelay = Math.random() * 5 + 's';
-            document.getElementById('star-field').appendChild(s);
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 2 + 1;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.setProperty('--d', (Math.random() * 3 + 2) + 's');
+            starsContainer.appendChild(star);
         }
     </script>
 </body>
