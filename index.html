@@ -1,219 +1,177 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" id="main-html">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lumina Medical AI | عيادة المستقبل</title>
+    <title>CineMatch AI | اكتشف عالمك</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #7c3aed; --dark: #050505; }
-        body { background: var(--dark); color: white; font-family: 'Cairo', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
+        :root { --p: #8b5cf6; --bg: #030005; }
+        body { background: var(--bg); color: white; font-family: 'Cairo', sans-serif; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .neon-text { text-shadow: 0 0 10px rgba(139, 92, 246, 0.5); }
         
-        /* تأثير الفقاعات المتحركة */
-        .bubble { position: fixed; border-radius: 50%; background: var(--primary); opacity: 0.12; filter: blur(60px); z-index: -1; animation: float 20s infinite alternate ease-in-out; }
-        @keyframes float { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(150px, 150px) scale(1.2); } }
+        /* تأثير الخلفية الكونية */
+        .stars { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at center, #1a0b2e 0%, #030005 100%); }
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.3; animation: blink 3s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .text-gradient { background: linear-gradient(to right, #a78bfa, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-glow { transition: 0.4s; position: relative; overflow: hidden; }
+        .btn-glow:hover { box-shadow: 0 0 25px var(--p); transform: translateY(-3px); }
         
-        .section { display: none; animation: fadeIn 0.6s ease; }
-        .active-section { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* جولة افتراضية وهمية */
-        .tour-bg { background: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80') center/cover; filter: saturate(0.5) brightness(0.3); }
+        .fade-in { animation: fadeIn 0.8s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .hidden { display: none; }
     </style>
 </head>
-<body class="pb-24">
+<body>
 
-    <div id="bubbles-container"></div>
+    <div class="stars" id="star-field"></div>
 
-    <nav class="sticky top-4 z-50 max-w-5xl mx-auto glass rounded-2xl p-4 flex justify-between items-center mx-4">
-        <div class="flex items-center gap-2 cursor-pointer" onclick="showSection('hero')">
-            <div class="bg-violet-600 w-9 h-9 rounded-xl flex items-center justify-center font-bold shadow-lg shadow-violet-600/30">L</div>
-            <span class="font-bold tracking-tighter text-xl">LUMINA <span class="text-violet-400">AI</span></span>
-        </div>
-        <div class="hidden md:flex gap-8 text-sm font-medium">
-            <button onclick="showSection('hero')" class="hover:text-violet-400 transition">الرئيسية</button>
-            <button onclick="showSection('doctors')" class="hover:text-violet-400 transition">الأطباء</button>
-            <button onclick="showSection('ai-diag')" class="hover:text-violet-400 transition">التشخيص الذكي</button>
-            <button onclick="showSection('tour')" class="hover:text-violet-400 transition">جولة 3D</button>
-        </div>
-        <button onclick="openBooking()" class="bg-violet-600 px-6 py-2.5 rounded-full text-xs font-bold hover:bg-violet-700 transition transform hover:scale-105">حجز موعد</button>
+    <nav class="p-6 flex justify-between items-center max-w-7xl mx-auto">
+        <div class="text-2xl font-black tracking-tighter neon-text italic">CINEMATCH <span class="text-violet-500">AI</span></div>
+        <div class="text-xs uppercase tracking-widest text-gray-400">محرك تحليل الشخصية السينمائي</div>
     </nav>
 
-    <section id="hero" class="section active-section max-w-5xl mx-auto text-center pt-28 px-6">
-        <span class="text-violet-400 text-sm font-bold tracking-widest uppercase mb-4 block">مرحباً بكم في لومينا الطبية</span>
-        <h1 class="text-6xl md:text-8xl font-bold mb-8 leading-tight">عيادة تدار بذكاء <br> <span class="text-gradient">اصطناعي عالمي</span></h1>
-        <p class="text-gray-400 max-w-2xl mx-auto mb-12 text-lg leading-relaxed">أول مركز طبي يدمج بين الرعاية الفاخرة وأحدث تقنيات التشخيص الفوري لتجربة صحية منقطعة النظير.</p>
-        <div class="flex flex-wrap justify-center gap-4">
-            <button onclick="showSection('ai-diag')" class="bg-white text-black px-10 py-4 rounded-2xl font-bold hover:bg-violet-400 transition">ابدأ فحصك الآن</button>
-            <button onclick="showSection('tour')" class="glass px-10 py-4 rounded-2xl font-bold hover:bg-white/5 transition">شاهد العيادة</button>
+    <main class="max-w-4xl mx-auto px-6 pt-20 pb-32">
+        
+        <div id="start-screen" class="text-center fade-in">
+            <h1 class="text-6xl md:text-8xl font-black mb-8 leading-none">فيلمك القادم <br><span class="text-violet-500">مكتوب في شخصيتك</span></h1>
+            <p class="text-gray-400 text-xl mb-12 max-w-2xl mx-auto">توقف عن البحث العشوائي. دع الذكاء الاصطناعي يحلل روحك ليختار لك الأنمي أو الفيلم الذي سيغير نظرتك للعالم.</p>
+            <button onclick="startQuiz()" class="btn-glow bg-violet-600 text-white px-12 py-5 rounded-2xl font-bold text-xl shadow-2xl">ابدأ التجربة الآن</button>
         </div>
-    </section>
 
-    <section id="doctors" class="section max-w-6xl mx-auto pt-24 px-6">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl font-bold mb-4">نخبة الأخصائيين</h2>
-            <p class="text-gray-500">أطباء بمهارات عالمية مدعومين بأحدث التقنيات</p>
-        </div>
-        <div id="doctors-list" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            </div>
-    </section>
-
-    <section id="ai-diag" class="section max-w-3xl mx-auto pt-24 px-6">
-        <div class="glass p-10 rounded-[2.5rem] border-violet-600/20 relative overflow-hidden">
-            <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl">🧠</div>
-            <h2 class="text-3xl font-bold mb-4">نظام التحليل الفوري</h2>
-            <p class="text-gray-400 mb-8">اكتب ما تشعر به بدقة وسيقوم الذكاء الاصطناعي بتوجيهك للقسم الصحيح.</p>
-            
-            <textarea id="diag-input" class="w-full bg-white/5 border border-white/10 rounded-2xl p-6 outline-none focus:border-violet-500 h-40 mb-6 transition-all text-lg" placeholder="مثال: أشعر بألم في الصدر مع ضيق تنفس..."></textarea>
-            
-            <button onclick="runDiagnosis()" id="diag-btn" class="w-full bg-violet-600 py-5 rounded-2xl font-bold text-lg shadow-xl shadow-violet-600/20 hover:bg-violet-700 transition">تحليل الحالة الآن</button>
-            
-            <div id="diag-result" class="mt-8 p-6 rounded-2xl bg-violet-900/10 border border-violet-500/20 text-violet-200 hidden leading-relaxed"></div>
-        </div>
-    </section>
-
-    <section id="tour" class="section max-w-6xl mx-auto pt-24 px-6">
-        <div class="text-center mb-10">
-            <h2 class="text-3xl font-bold mb-4 italic">تجربة بصرية 360°</h2>
-            <p class="text-gray-500">تجوّل في أروقة عيادتنا من منزلك</p>
-        </div>
-        <div class="aspect-video w-full rounded-[3rem] glass flex items-center justify-center border border-white/10 relative overflow-hidden tour-bg">
-            <div class="z-10 text-center">
-                <div class="w-20 h-20 bg-violet-600 rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer hover:scale-110 transition animate-bounce">▶</div>
-                <p class="font-bold tracking-widest uppercase text-sm">اضغط لبدء الجولة الافتراضية</p>
+        <div id="quiz-screen" class="hidden fade-in">
+            <div class="glass p-10 rounded-[3rem] border-violet-500/20">
+                <div class="flex justify-between mb-8">
+                    <span id="progress-text" class="text-violet-400 font-bold">السؤال 1 من 4</span>
+                    <div class="w-32 h-2 bg-white/5 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="h-full bg-violet-600 transition-all duration-500" style="width: 25%"></div>
+                    </div>
+                </div>
+                
+                <h2 id="question-text" class="text-3xl font-bold mb-10 leading-snug">إذا وجدت باباً غامضاً في منتصف غابة، ماذا تفعل؟</h2>
+                
+                <div id="options-container" class="grid gap-4">
+                    </div>
             </div>
         </div>
-    </section>
 
-    <div id="modal" class="fixed inset-0 z-[100] bg-black/90 hidden items-center justify-center p-6 backdrop-blur-sm">
-        <div class="glass p-10 rounded-[3rem] w-full max-w-md relative shadow-2xl">
-            <button onclick="closeBooking()" class="absolute top-6 left-6 text-gray-500 hover:text-white">✕</button>
-            <h3 class="text-2xl font-bold mb-8">حجز موعد بريميوم</h3>
-            <div class="space-y-4">
-                <input type="text" placeholder="الاسم الكامل" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl">
-                <input type="tel" placeholder="رقم الهاتف" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl">
-                <select class="w-full bg-black border border-white/10 p-4 rounded-2xl">
-                    <option>اختر القسم</option>
-                    <option>القلب</option>
-                    <option>الأعصاب</option>
-                    <option>تجميل الأسنان</option>
-                </select>
-                <button onclick="alert('تم إرسال طلبك! سيتصل بك المساعد الرقمي قريباً.'); closeBooking()" class="w-full bg-violet-600 py-4 rounded-2xl font-bold mt-4 shadow-lg">تأكيد الطلب</button>
+        <div id="result-screen" class="hidden text-center fade-in">
+            <div class="glass p-12 rounded-[4rem] border-violet-500/30 relative overflow-hidden">
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-violet-600/20 blur-3xl"></div>
+                <h3 class="text-violet-400 font-bold tracking-widest uppercase mb-4">تم التحليل بنجاح! النتيجة هي:</h3>
+                <h2 id="result-title" class="text-5xl md:text-7xl font-black mb-6 neon-text">Interstellar</h2>
+                <p id="result-desc" class="text-gray-400 text-lg mb-10 leading-relaxed">بناءً على شخصيتك المحبة للاستكشاف والعمق الفلسفي، هذا العمل سيلمس مشاعرك بعمق.</p>
+                
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button onclick="location.reload()" class="bg-white/5 border border-white/10 px-8 py-4 rounded-2xl hover:bg-white/10 transition">إعادة التحليل</button>
+                    <button class="bg-violet-600 px-8 py-4 rounded-2xl font-bold">مشاهدة الإعلان (Trailer)</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <footer class="fixed bottom-6 left-1/2 -translate-x-1/2 glass px-8 py-3 rounded-full flex gap-6 items-center border-white/10 z-50">
-        <button onclick="setLang('AR')" class="text-xs font-bold hover:text-violet-400">العربية</button>
-        <div class="w-px h-4 bg-white/10"></div>
-        <button onclick="setLang('EN')" class="text-xs font-bold hover:text-violet-400">ENGLISH</button>
-    </footer>
+    </main>
 
     <script>
-        // نظام البيانات واللغات
-        const siteData = {
-            AR: {
-                docs: [
-                    { name: "د. سارة المنصور", spec: "كبيرة جراحي القلب", icon: "👩‍⚕️" },
-                    { name: "د. يوسف إبراهيم", spec: "أخصائي طب الأعصاب الذكي", icon: "👨‍⚕️" },
-                    { name: "د. مريم العلي", spec: "خبيرة تجميل الأسنان", icon: "👩‍⚕️" }
-                ],
-                diagLogic: [
-                    { keys: ['ألم', 'صدر', 'قلب', 'تنفس'], res: "🚨 تنبيه حرج: الأعراض تشير لجهد قلبي. يرجى التوجه للطوارئ فوراً أو الاتصال بنا الآن." },
-                    { keys: ['رأس', 'صداع', 'دوار', 'شقيقة'], res: "🧠 تحليل AI: قد يكون ناتجاً عن ضغط عصبي. يُنصح بحجز موعد في قسم الأعصاب للفحص بالرنين." },
-                    { keys: ['زكام', 'حمى', 'سعال', 'برد'], res: "🌡️ تحليل AI: أعراض إنفلونزا. ننصح بالراحة والسوائل، ويمكنك طلب استشارة فيديو سريعة." },
-                    { keys: ['أسنان', 'لثة', 'ألم فك'], res: "🦷 تحليل AI: يرجى مراجعة قسم الأسنان التجميلي. لدينا تقنيات ليزر بدون ألم." }
-                ],
-                defaultDiag: "🔎 النظام لم يحدد الحالة بدقة، يرجى كتابة المزيد من التفاصيل أو التواصل مع الطبيب العام."
+        const questions = [
+            {
+                q: "كيف تفضل قضاء ليلة عطلتك؟",
+                options: [
+                    { text: "مغامرة في مكان مجهول", type: "adventure" },
+                    { text: "حل لغز معقد أو قراءة كتاب", type: "mystery" },
+                    { text: "جلسة هادئة مع مشاعر عميقة", type: "drama" },
+                    { text: "تحدي ومنافسة مع الأصدقاء", type: "action" }
+                ]
             },
-            EN: {
-                docs: [
-                    { name: "Dr. Sarah Mansour", spec: "Senior Cardiologist", icon: "👩‍⚕️" },
-                    { name: "Dr. Youssef Ibrahim", spec: "AI-Neurology Specialist", icon: "👨‍⚕️" },
-                    { name: "Dr. Maryam Al-Ali", spec: "Cosmetic Dentistry Expert", icon: "👩‍⚕️" }
-                ],
-                diagLogic: [
-                    { keys: ['pain', 'chest', 'heart', 'breath'], res: "🚨 CRITICAL: Symptoms suggest cardiac stress. Please visit ER immediately or call us." },
-                    { keys: ['head', 'headache', 'migraine'], res: "🧠 AI Analysis: Possible neurological tension. Booking a Neurology MRI scan is recommended." },
-                    { keys: ['cold', 'flu', 'fever'], res: "🌡️ AI Analysis: Seasonal flu symptoms. Rest and hydration advised. Try our Video Consultation." }
-                ],
-                defaultDiag: "🔎 AI could not determine the exact case. Please provide more details or contact a GP."
+            {
+                q: "ما هو اللون الذي يمثل طاقتك الحالية؟",
+                options: [
+                    { text: "الأسود الغامض", type: "mystery" },
+                    { text: "الأحمر المشتعل", type: "action" },
+                    { text: "الأزرق الهادئ", type: "drama" },
+                    { text: "الذهبي المتفائل", type: "adventure" }
+                ]
+            },
+            {
+                q: "إذا كنت بطلاً في قصة، ما هي قوتك؟",
+                options: [
+                    { text: "الذكاء الخارق والتخطيط", type: "mystery" },
+                    { text: "القوة البدنية والسرعة", type: "action" },
+                    { text: "القدرة على شفاء الآخرين", type: "drama" },
+                    { text: "التنقل بين العوالم", type: "adventure" }
+                ]
             }
+        ];
+
+        const database = {
+            adventure: { title: "One Piece / Interstellar", desc: "أنت شخص لا يعرف الحدود، تبحث دائماً عن الحقيقة فيما وراء الأفق. هذا العمل هو مرآتك." },
+            mystery: { title: "Death Note / Inception", desc: "عقلك لا يتوقف عن العمل. تعشق التفاصيل والخطط المعقدة. ستبهرك هذه القصة." },
+            action: { title: "Attack on Titan / John Wick", desc: "أنت شخص حاسم، تحب الإثارة وتواجه التحديات مباشرة. استعد لجرعة أدرينالين لا تنتهي." },
+            drama: { title: "Your Lie in April / The Pursuit of Happyness", desc: "تملك قلباً حساساً وتقدر الروابط الإنسانية العميقة. استعد لرحلة عاطفية فريدة." }
         };
 
-        // وظائف التنقل
-        function showSection(id) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active-section'));
-            document.getElementById(id).classList.add('active-section');
-            window.scrollTo(0,0);
+        let currentStep = 0;
+        let scores = { adventure: 0, mystery: 0, action: 0, drama: 0 };
+
+        function startQuiz() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            showQuestion();
         }
 
-        // تحميل الأطباء
-        function loadDocs(lang) {
-            const list = document.getElementById('doctors-list');
-            list.innerHTML = '';
-            siteData[lang].docs.forEach(d => {
-                list.innerHTML += `
-                    <div class="glass p-8 rounded-[2rem] text-center hover:border-violet-600 transition-all group cursor-pointer">
-                        <div class="text-5xl mb-4 group-hover:scale-110 transition">${d.icon}</div>
-                        <h4 class="font-bold text-xl mb-1">${d.name}</h4>
-                        <p class="text-gray-500 text-sm">${d.spec}</p>
-                    </div>
-                `;
+        function showQuestion() {
+            const q = questions[currentStep];
+            document.getElementById('question-text').innerText = q.q;
+            document.getElementById('progress-text').innerText = `السؤال ${currentStep + 1} من ${questions.length}`;
+            document.getElementById('progress-bar').style.width = ((currentStep + 1) / questions.length * 100) + '%';
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "glass p-6 rounded-2xl text-right hover:border-violet-500 transition-all hover:bg-violet-600/10 font-bold";
+                btn.innerText = opt.text;
+                btn.onclick = () => nextStep(opt.type);
+                container.appendChild(btn);
             });
         }
 
-        // محرك التشخيص
-        function runDiagnosis() {
-            const input = document.getElementById('diag-input').value.toLowerCase();
-            const btn = document.getElementById('diag-btn');
-            const res = document.getElementById('diag-result');
-            const lang = document.getElementById('main-html').lang.toUpperCase() || 'AR';
-
-            if(input.length < 10) return alert("يرجى وصف الحالة بتفصيل أكثر");
-
-            btn.innerText = "جاري التحليل الرقمي...";
-            btn.disabled = true;
-            res.classList.add('hidden');
-
-            setTimeout(() => {
-                let found = siteData[lang].diagLogic.find(item => item.keys.some(k => input.includes(k)));
-                res.innerText = found ? found.res : siteData[lang].defaultDiag;
-                res.classList.remove('hidden');
-                btn.innerText = "تحليل جديد";
-                btn.disabled = false;
-            }, 2000);
+        function nextStep(type) {
+            scores[type]++;
+            currentStep++;
+            if (currentStep < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
         }
 
-        // تغيير اللغة
-        function setLang(l) {
-            const html = document.getElementById('main-html');
-            html.dir = l === 'AR' ? 'rtl' : 'ltr';
-            html.lang = l.toLowerCase();
-            loadDocs(l);
-            showSection('hero');
-            alert(l === 'AR' ? 'تم تحويل الموقع للعربية' : 'Site switched to English');
+        function showResult() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            // تحديد النوع الأعلى تصويتاً
+            const winner = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+            const res = database[winner];
+            
+            document.getElementById('result-title').innerText = res.title;
+            document.getElementById('result-desc').innerText = res.desc;
         }
 
-        function openBooking() { document.getElementById('modal').style.display = 'flex'; }
-        function closeBooking() { document.getElementById('modal').style.display = 'none'; }
-
-        // تهيئة الفقاعات
-        for(let i=0; i<15; i++) {
-            const b = document.createElement('div');
-            b.className = 'bubble';
-            const s = Math.random()*400+150;
-            b.style.width = s+'px'; b.style.height = s+'px';
-            b.style.left = Math.random()*100+'%'; b.style.top = Math.random()*100+'%';
-            b.style.animationDelay = Math.random()*5+'s';
-            document.getElementById('bubbles-container').appendChild(b);
+        // إنشاء النجوم في الخلفية
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 3;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            document.getElementById('star-field').appendChild(star);
         }
-
-        loadDocs('AR');
     </script>
 </body>
 </html>
