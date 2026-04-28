@@ -3,176 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lumina Medical AI Portal</title>
+    <title>Lumina Medical AI | عيادة المستقبل</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #7c3aed; --bg: #050505; }
-        body { background: var(--bg); color: white; font-family: 'Cairo', sans-serif; transition: all 0.3s ease; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .bubble { position: fixed; border-radius: 50%; background: var(--p); opacity: 0.1; filter: blur(60px); z-index: -1; animation: float 20s infinite alternate; }
-        @keyframes float { 0% { transform: translate(0,0); } 100% { transform: translate(100px, 100px); } }
-        .hidden { display: none; }
-        .active-section { display: block !important; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        :root { --primary: #7c3aed; --dark: #050505; }
+        body { background: var(--dark); color: white; font-family: 'Cairo', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
+        
+        /* تأثير الفقاعات المتحركة */
+        .bubble { position: fixed; border-radius: 50%; background: var(--primary); opacity: 0.12; filter: blur(60px); z-index: -1; animation: float 20s infinite alternate ease-in-out; }
+        @keyframes float { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(150px, 150px) scale(1.2); } }
+
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .text-gradient { background: linear-gradient(to right, #a78bfa, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .section { display: none; animation: fadeIn 0.6s ease; }
+        .active-section { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* جولة افتراضية وهمية */
+        .tour-bg { background: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80') center/cover; filter: saturate(0.5) brightness(0.3); }
     </style>
 </head>
-<body class="pb-20">
+<body class="pb-24">
 
     <div id="bubbles-container"></div>
 
-    <nav class="sticky top-4 z-50 max-w-6xl mx-auto glass rounded-2xl p-4 flex justify-between items-center mx-4">
-        <div class="flex items-center gap-2">
-            <div class="bg-violet-600 w-8 h-8 rounded-lg flex items-center justify-center font-bold">L</div>
-            <span class="font-bold tracking-tighter">LUMINA <span class="text-violet-400">AI</span></span>
+    <nav class="sticky top-4 z-50 max-w-5xl mx-auto glass rounded-2xl p-4 flex justify-between items-center mx-4">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="showSection('hero')">
+            <div class="bg-violet-600 w-9 h-9 rounded-xl flex items-center justify-center font-bold shadow-lg shadow-violet-600/30">L</div>
+            <span class="font-bold tracking-tighter text-xl">LUMINA <span class="text-violet-400">AI</span></span>
         </div>
-        <div class="hidden md:flex gap-6 text-sm">
-            <button onclick="showSection('hero')" class="hover:text-violet-400">الرئيسية</button>
-            <button onclick="showSection('doctors')" class="hover:text-violet-400">الأطباء</button>
-            <button onclick="showSection('ai-diag')" class="hover:text-violet-400">التشخيص الذكي</button>
-            <button onclick="showSection('tour')" class="hover:text-violet-400">جولة 3D</button>
+        <div class="hidden md:flex gap-8 text-sm font-medium">
+            <button onclick="showSection('hero')" class="hover:text-violet-400 transition">الرئيسية</button>
+            <button onclick="showSection('doctors')" class="hover:text-violet-400 transition">الأطباء</button>
+            <button onclick="showSection('ai-diag')" class="hover:text-violet-400 transition">التشخيص الذكي</button>
+            <button onclick="showSection('tour')" class="hover:text-violet-400 transition">جولة 3D</button>
         </div>
-        <button onclick="openBooking()" class="bg-violet-600 px-5 py-2 rounded-full text-xs font-bold hover:scale-105 transition">حجز موعد</button>
+        <button onclick="openBooking()" class="bg-violet-600 px-6 py-2.5 rounded-full text-xs font-bold hover:bg-violet-700 transition transform hover:scale-105">حجز موعد</button>
     </nav>
 
-    <section id="hero" class="section active-section max-w-5xl mx-auto text-center pt-24 px-6">
-        <h1 id="h-title" class="text-6xl md:text-8xl font-bold mb-6 italic">الرعاية <span class="text-violet-500">الفائقة</span></h1>
-        <p id="h-desc" class="text-gray-400 max-w-xl mx-auto mb-10 text-lg">مرحبًا بك في أول عيادة تدار بالذكاء الاصطناعي في المنطقة.</p>
-        <div class="flex justify-center gap-4">
-            <button onclick="showSection('ai-diag')" class="glass px-8 py-4 rounded-2xl border-violet-500/50 hover:bg-violet-500/10 transition">ابدأ التشخيص الآن</button>
+    <section id="hero" class="section active-section max-w-5xl mx-auto text-center pt-28 px-6">
+        <span class="text-violet-400 text-sm font-bold tracking-widest uppercase mb-4 block">مرحباً بكم في لومينا الطبية</span>
+        <h1 class="text-6xl md:text-8xl font-bold mb-8 leading-tight">عيادة تدار بذكاء <br> <span class="text-gradient">اصطناعي عالمي</span></h1>
+        <p class="text-gray-400 max-w-2xl mx-auto mb-12 text-lg leading-relaxed">أول مركز طبي يدمج بين الرعاية الفاخرة وأحدث تقنيات التشخيص الفوري لتجربة صحية منقطعة النظير.</p>
+        <div class="flex flex-wrap justify-center gap-4">
+            <button onclick="showSection('ai-diag')" class="bg-white text-black px-10 py-4 rounded-2xl font-bold hover:bg-violet-400 transition">ابدأ فحصك الآن</button>
+            <button onclick="showSection('tour')" class="glass px-10 py-4 rounded-2xl font-bold hover:bg-white/5 transition">شاهد العيادة</button>
         </div>
     </section>
 
-    <section id="doctors" class="section hidden max-w-6xl mx-auto pt-20 px-6">
-        <h2 class="text-3xl font-bold mb-10 text-center">نخبة الأطباء</h2>
-        <div id="doctors-list" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <section id="doctors" class="section max-w-6xl mx-auto pt-24 px-6">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold mb-4">نخبة الأخصائيين</h2>
+            <p class="text-gray-500">أطباء بمهارات عالمية مدعومين بأحدث التقنيات</p>
+        </div>
+        <div id="doctors-list" class="grid grid-cols-1 md:grid-cols-3 gap-8">
             </div>
     </section>
 
-    <section id="ai-diag" class="section hidden max-w-3xl mx-auto pt-20 px-6">
-        <div class="glass p-8 rounded-3xl border-violet-600/30">
-            <h2 class="text-2xl font-bold mb-4">فحص الذكاء الاصطناعي</h2>
-            <p class="text-sm text-gray-400 mb-6">صف الأعراض التي تشعر بها وسيقوم النظام بتحليلها مبدئياً.</p>
-            <textarea id="diag-input" class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 outline-none focus:border-violet-500 h-32 mb-4" placeholder="مثلاً: أشعر بصداع شديد وألم في العين..."></textarea>
-            <button onclick="runDiagnosis()" id="diag-btn" class="w-full bg-violet-600 py-4 rounded-2xl font-bold">بدء التحليل الفوري</button>
-            <div id="diag-result" class="mt-6 p-4 rounded-xl bg-violet-900/20 text-violet-300 hidden"></div>
+    <section id="ai-diag" class="section max-w-3xl mx-auto pt-24 px-6">
+        <div class="glass p-10 rounded-[2.5rem] border-violet-600/20 relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl">🧠</div>
+            <h2 class="text-3xl font-bold mb-4">نظام التحليل الفوري</h2>
+            <p class="text-gray-400 mb-8">اكتب ما تشعر به بدقة وسيقوم الذكاء الاصطناعي بتوجيهك للقسم الصحيح.</p>
+            
+            <textarea id="diag-input" class="w-full bg-white/5 border border-white/10 rounded-2xl p-6 outline-none focus:border-violet-500 h-40 mb-6 transition-all text-lg" placeholder="مثال: أشعر بألم في الصدر مع ضيق تنفس..."></textarea>
+            
+            <button onclick="runDiagnosis()" id="diag-btn" class="w-full bg-violet-600 py-5 rounded-2xl font-bold text-lg shadow-xl shadow-violet-600/20 hover:bg-violet-700 transition">تحليل الحالة الآن</button>
+            
+            <div id="diag-result" class="mt-8 p-6 rounded-2xl bg-violet-900/10 border border-violet-500/20 text-violet-200 hidden leading-relaxed"></div>
         </div>
     </section>
 
-    <section id="tour" class="section hidden max-w-6xl mx-auto pt-20 px-6 text-center">
-        <h2 class="text-2xl font-bold mb-6">الجولة الافتراضية 360°</h2>
-        <div class="aspect-video w-full rounded-3xl glass flex items-center justify-center border-2 border-dashed border-white/10 relative overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-tr from-violet-900/20 to-transparent"></div>
-            <p class="z-10 text-gray-300">جاري تحميل البيئة الثلاثية الأبعاد للعيادة...</p>
+    <section id="tour" class="section max-w-6xl mx-auto pt-24 px-6">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-bold mb-4 italic">تجربة بصرية 360°</h2>
+            <p class="text-gray-500">تجوّل في أروقة عيادتنا من منزلك</p>
+        </div>
+        <div class="aspect-video w-full rounded-[3rem] glass flex items-center justify-center border border-white/10 relative overflow-hidden tour-bg">
+            <div class="z-10 text-center">
+                <div class="w-20 h-20 bg-violet-600 rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer hover:scale-110 transition animate-bounce">▶</div>
+                <p class="font-bold tracking-widest uppercase text-sm">اضغط لبدء الجولة الافتراضية</p>
+            </div>
         </div>
     </section>
 
-    <div id="modal" class="fixed inset-0 z-[100] bg-black/90 hidden items-center justify-center p-6">
-        <div class="glass p-8 rounded-3xl w-full max-w-md relative">
-            <button onclick="closeBooking()" class="absolute top-4 right-4">✕</button>
-            <h3 class="text-xl font-bold mb-6" id="m-title">حجز موعد</h3>
+    <div id="modal" class="fixed inset-0 z-[100] bg-black/90 hidden items-center justify-center p-6 backdrop-blur-sm">
+        <div class="glass p-10 rounded-[3rem] w-full max-w-md relative shadow-2xl">
+            <button onclick="closeBooking()" class="absolute top-6 left-6 text-gray-500 hover:text-white">✕</button>
+            <h3 class="text-2xl font-bold mb-8">حجز موعد بريميوم</h3>
             <div class="space-y-4">
-                <input type="text" placeholder="الاسم" class="w-full bg-white/5 border border-white/10 p-3 rounded-xl">
-                <input type="date" class="w-full bg-white/5 border border-white/10 p-3 rounded-xl text-gray-400">
-                <button onclick="alert('تم الحجز!'); closeBooking()" class="w-full bg-violet-600 py-3 rounded-xl font-bold">تأكيد</button>
+                <input type="text" placeholder="الاسم الكامل" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl">
+                <input type="tel" placeholder="رقم الهاتف" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl">
+                <select class="w-full bg-black border border-white/10 p-4 rounded-2xl">
+                    <option>اختر القسم</option>
+                    <option>القلب</option>
+                    <option>الأعصاب</option>
+                    <option>تجميل الأسنان</option>
+                </select>
+                <button onclick="alert('تم إرسال طلبك! سيتصل بك المساعد الرقمي قريباً.'); closeBooking()" class="w-full bg-violet-600 py-4 rounded-2xl font-bold mt-4 shadow-lg">تأكيد الطلب</button>
             </div>
         </div>
     </div>
 
-    <footer class="fixed bottom-0 left-0 right-0 glass p-4 flex justify-around items-center border-t border-white/5">
+    <footer class="fixed bottom-6 left-1/2 -translate-x-1/2 glass px-8 py-3 rounded-full flex gap-6 items-center border-white/10 z-50">
         <button onclick="setLang('AR')" class="text-xs font-bold hover:text-violet-400">العربية</button>
+        <div class="w-px h-4 bg-white/10"></div>
         <button onclick="setLang('EN')" class="text-xs font-bold hover:text-violet-400">ENGLISH</button>
     </footer>
 
     <script>
-        // البيانات
-        const data = {
+        // نظام البيانات واللغات
+        const siteData = {
             AR: {
-                hTitle: "الرعاية <span class='text-violet-500'>الفائقة</span>",
-                hDesc: "مرحبًا بك في أول عيادة تدار بالذكاء الاصطناعي في المنطقة.",
                 docs: [
-                    { name: "د. سارة أحمد", spec: "جراحة القلب", img: "👩‍⚕️" },
-                    { name: "د. علي منصور", spec: "أعصاب", img: "👨‍⚕️" },
-                    { name: "د. ليلى خالد", spec: "عيون", img: "👩‍⚕️" }
+                    { name: "د. سارة المنصور", spec: "كبيرة جراحي القلب", icon: "👩‍⚕️" },
+                    { name: "د. يوسف إبراهيم", spec: "أخصائي طب الأعصاب الذكي", icon: "👨‍⚕️" },
+                    { name: "د. مريم العلي", spec: "خبيرة تجميل الأسنان", icon: "👩‍⚕️" }
                 ],
-                diagMsg: "جاري تحليل الأعراض... النتيجة: ينصح بمراجعة قسم الباطنية، حالة بسيطة.",
-                diagBtn: "تحليل الحالة"
+                diagLogic: [
+                    { keys: ['ألم', 'صدر', 'قلب', 'تنفس'], res: "🚨 تنبيه حرج: الأعراض تشير لجهد قلبي. يرجى التوجه للطوارئ فوراً أو الاتصال بنا الآن." },
+                    { keys: ['رأس', 'صداع', 'دوار', 'شقيقة'], res: "🧠 تحليل AI: قد يكون ناتجاً عن ضغط عصبي. يُنصح بحجز موعد في قسم الأعصاب للفحص بالرنين." },
+                    { keys: ['زكام', 'حمى', 'سعال', 'برد'], res: "🌡️ تحليل AI: أعراض إنفلونزا. ننصح بالراحة والسوائل، ويمكنك طلب استشارة فيديو سريعة." },
+                    { keys: ['أسنان', 'لثة', 'ألم فك'], res: "🦷 تحليل AI: يرجى مراجعة قسم الأسنان التجميلي. لدينا تقنيات ليزر بدون ألم." }
+                ],
+                defaultDiag: "🔎 النظام لم يحدد الحالة بدقة، يرجى كتابة المزيد من التفاصيل أو التواصل مع الطبيب العام."
             },
             EN: {
-                hTitle: "Next-Gen <span class='text-violet-500'>Healthcare</span>",
-                hDesc: "Welcome to the region's first AI-driven medical institution.",
                 docs: [
-                    { name: "Dr. Sarah Ahmed", spec: "Cardiology", img: "👩‍⚕️" },
-                    { name: "Dr. Ali Mansour", spec: "Neurology", img: "👨‍⚕️" },
-                    { name: "Dr. Leila Khaled", spec: "Ophthalmology", img: "👩‍⚕️" }
+                    { name: "Dr. Sarah Mansour", spec: "Senior Cardiologist", icon: "👩‍⚕️" },
+                    { name: "Dr. Youssef Ibrahim", spec: "AI-Neurology Specialist", icon: "👨‍⚕️" },
+                    { name: "Dr. Maryam Al-Ali", spec: "Cosmetic Dentistry Expert", icon: "👩‍⚕️" }
                 ],
-                diagMsg: "Analyzing symptoms... Result: Recommended to visit Internal Medicine department.",
-                diagBtn: "Run AI Diagnosis"
+                diagLogic: [
+                    { keys: ['pain', 'chest', 'heart', 'breath'], res: "🚨 CRITICAL: Symptoms suggest cardiac stress. Please visit ER immediately or call us." },
+                    { keys: ['head', 'headache', 'migraine'], res: "🧠 AI Analysis: Possible neurological tension. Booking a Neurology MRI scan is recommended." },
+                    { keys: ['cold', 'flu', 'fever'], res: "🌡️ AI Analysis: Seasonal flu symptoms. Rest and hydration advised. Try our Video Consultation." }
+                ],
+                defaultDiag: "🔎 AI could not determine the exact case. Please provide more details or contact a GP."
             }
         };
 
-        // تنقل الأقسام
+        // وظائف التنقل
         function showSection(id) {
-            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
-            document.getElementById(id).classList.remove('hidden');
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active-section'));
             document.getElementById(id).classList.add('active-section');
+            window.scrollTo(0,0);
         }
 
-        // الأطباء برمجياً
-        function loadDoctors(lang) {
+        // تحميل الأطباء
+        function loadDocs(lang) {
             const list = document.getElementById('doctors-list');
             list.innerHTML = '';
-            data[lang].docs.forEach(d => {
+            siteData[lang].docs.forEach(d => {
                 list.innerHTML += `
-                    <div class="glass p-6 rounded-2xl text-center hover:border-violet-500 transition cursor-pointer">
-                        <div class="text-4xl mb-4">${d.img}</div>
-                        <h4 class="font-bold">${d.name}</h4>
-                        <p class="text-sm text-gray-500">${d.spec}</p>
+                    <div class="glass p-8 rounded-[2rem] text-center hover:border-violet-600 transition-all group cursor-pointer">
+                        <div class="text-5xl mb-4 group-hover:scale-110 transition">${d.icon}</div>
+                        <h4 class="font-bold text-xl mb-1">${d.name}</h4>
+                        <p class="text-gray-500 text-sm">${d.spec}</p>
                     </div>
                 `;
             });
         }
 
-        // الذكاء الاصطناعي
+        // محرك التشخيص
         function runDiagnosis() {
+            const input = document.getElementById('diag-input').value.toLowerCase();
             const btn = document.getElementById('diag-btn');
             const res = document.getElementById('diag-result');
-            const currentLang = document.getElementById('main-html').lang.toUpperCase() || 'AR';
-            
-            btn.innerText = "...";
+            const lang = document.getElementById('main-html').lang.toUpperCase() || 'AR';
+
+            if(input.length < 10) return alert("يرجى وصف الحالة بتفصيل أكثر");
+
+            btn.innerText = "جاري التحليل الرقمي...";
+            btn.disabled = true;
+            res.classList.add('hidden');
+
             setTimeout(() => {
-                res.innerText = data[currentLang].diagMsg;
+                let found = siteData[lang].diagLogic.find(item => item.keys.some(k => input.includes(k)));
+                res.innerText = found ? found.res : siteData[lang].defaultDiag;
                 res.classList.remove('hidden');
-                btn.innerText = data[currentLang].diagBtn;
+                btn.innerText = "تحليل جديد";
+                btn.disabled = false;
             }, 2000);
         }
 
         // تغيير اللغة
         function setLang(l) {
-            const d = data[l];
-            document.getElementById('main-html').dir = l === 'AR' ? 'rtl' : 'ltr';
-            document.getElementById('main-html').lang = l.toLowerCase();
-            document.getElementById('h-title').innerHTML = d.hTitle;
-            document.getElementById('h-desc').innerText = d.hDesc;
-            document.getElementById('diag-btn').innerText = d.diagBtn;
-            loadDoctors(l);
+            const html = document.getElementById('main-html');
+            html.dir = l === 'AR' ? 'rtl' : 'ltr';
+            html.lang = l.toLowerCase();
+            loadDocs(l);
+            showSection('hero');
+            alert(l === 'AR' ? 'تم تحويل الموقع للعربية' : 'Site switched to English');
         }
 
         function openBooking() { document.getElementById('modal').style.display = 'flex'; }
         function closeBooking() { document.getElementById('modal').style.display = 'none'; }
 
-        // تهيئة
-        loadDoctors('AR');
-        // فقاعات الخلفية
-        for(let i=0; i<10; i++) {
+        // تهيئة الفقاعات
+        for(let i=0; i<15; i++) {
             const b = document.createElement('div');
             b.className = 'bubble';
-            b.style.width = Math.random()*300+100+'px';
-            b.style.height = b.style.width;
-            b.style.left = Math.random()*100+'%';
-            b.style.top = Math.random()*100+'%';
+            const s = Math.random()*400+150;
+            b.style.width = s+'px'; b.style.height = s+'px';
+            b.style.left = Math.random()*100+'%'; b.style.top = Math.random()*100+'%';
+            b.style.animationDelay = Math.random()*5+'s';
             document.getElementById('bubbles-container').appendChild(b);
         }
+
+        loadDocs('AR');
     </script>
 </body>
 </html>
